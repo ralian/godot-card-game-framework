@@ -4,8 +4,8 @@
 class_name ViewportCardFocus
 extends Node2D
 
-export(PackedScene) var board_scene : PackedScene
-export(PackedScene) var info_panel_scene : PackedScene
+@export var board_scene : PackedScene
+@export var info_panel_scene : PackedScene
 # This array holds all the previously focused cards.
 var _previously_focused_cards := {}
 # This var hold the currently focused card duplicate.
@@ -23,7 +23,7 @@ func _ready():
 	# "hand" should be one of them.
 	$ViewportContainer/Viewport.add_child(board_scene.instance())
 	if not cfc.are_all_nodes_mapped:
-		yield(cfc, "all_nodes_mapped")
+		await ToSignal(cfc, "all_nodes_mapped")
 	# warning-ignore:return_value_discarded
 	get_viewport().connect("size_changed",Callable(self,"_on_Viewport_size_changed"))
 	$ViewportContainer.rect_size = get_viewport().size
@@ -164,8 +164,8 @@ func _input(event):
 	# for any number of purposes
 	if event.is_action_pressed("screenshot_card"):
 		var img = _focus_viewport.get_texture().get_data()
-		yield(get_tree(), "idle_frame")
-		yield(get_tree(), "idle_frame")
+		await get_tree().ToSignal(get_tree(), "idle_frame")
+		await get_tree().ToSignal(get_tree(), "idle_frame")
 		img.convert(Image.FORMAT_RGBA8)
 		img.flip_y()
 		img.save_png("user://" + _current_focus_source.canonical_name + ".png")

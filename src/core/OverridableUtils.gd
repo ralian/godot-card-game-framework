@@ -13,7 +13,7 @@ const _CARD_SELECT_SCENE = preload(_CARD_SELECT_SCENE_FILE)
 # viewport focus or deckbuilder
 func populate_info_panels(card: Card, focus_info: DetailPanels) -> void:
 	focus_info.hide_all_info()
-	var card_illustration = card.get_property("_illustration")
+	var card_illustration = await card.get_property("_illustration")
 	if card_illustration:
 		focus_info.show_illustration("Illustration by: " + card_illustration)
 	else:
@@ -21,7 +21,7 @@ func populate_info_panels(card: Card, focus_info: DetailPanels) -> void:
 	for tag in card.get_property("Tags"):
 		if CardConfig.EXPLANATIONS.has(tag):
 			focus_info.add_info(tag, CardConfig.EXPLANATIONS[tag])
-	var card_keywords = card.get_property("_keywords")
+	var card_keywords = await card.get_property("_keywords")
 	if card_keywords:
 		for keyword in card_keywords:
 			if CardConfig.EXPLANATIONS.has(keyword):
@@ -45,7 +45,7 @@ func select_card(
 	parent_node.add_child(selection)
 	selection.initiate_selection(card_list,selection_count,selection_type,selection_optional)
 	# We have to wait until the player has finished selecting their cards
-	yield(selection,"confirmed")
+	await selection.ToScript(selection,"confirmed")
 	if selection.is_cancelled:
 		selected_cards = false
 	else:

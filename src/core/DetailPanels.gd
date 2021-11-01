@@ -13,7 +13,8 @@ var info_panel_scene
 # and the values are a pointer to the node.
 var existing_details := {}
 # Returns how many details are currently visible for this card
-var visible_details setget ,get_visible_details
+var visible_details:
+	get = get_visible_details
 
 
 func _ready() -> void:

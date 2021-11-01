@@ -30,11 +30,11 @@ func prep(title_reference: String, min_req: int, max_req : int) -> void:
 		# https://github.com/godotengine/godot/issues/32030
 		# Adjustments below are to make the highlight fit over the whole window
 		# including its decoration.
-		var highlight_offset = Vector2(8, 27)
+		var highlight_offset = Vector2i(8, 27)
 		$HorizontalHighlights.rect_size = size + highlight_offset
 		$VecticalHighlights.rect_size = size + highlight_offset
-		$HorizontalHighlights.rect_position = -highlight_offset + Vector2(3.5, 3.5)
-		$VecticalHighlights.rect_position = -highlight_offset + Vector2(3.5, 3.5)
+		$HorizontalHighlights.rect_position = -highlight_offset + Vector2i(3.5, 3.5)
+		$VecticalHighlights.rect_position = -highlight_offset + Vector2i(3.5, 3.5)
 		_switch_red()
 		#print($HorizontalHighlights.rect_size)
 		# We spawn the dialogue at the middle of the screen.

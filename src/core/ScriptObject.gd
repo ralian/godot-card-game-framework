@@ -71,9 +71,7 @@ func _find_subjects(prev_subjects := [], stored_integer := 0) -> Array:
 				if not SP.check_validity(c, script_definition, "subject"):
 					is_valid = false
 		SP.KEY_SUBJECT_V_TARGET:
-			var c = _initiate_card_targeting()
-			if c is GDScriptFunctionState: # Still working.
-				c = yield(c, "completed")
+			var c = await _initiate_card_targeting()
 			# If the target is null, it means the player pointed at nothing
 			if c:
 				is_valid = SP.check_validity(c, script_definition, "subject")
@@ -107,7 +105,7 @@ func _find_subjects(prev_subjects := [], stored_integer := 0) -> Array:
 		var selection_optional = get_property(SP.KEY_SELECTION_OPTIONAL)
 		if get_property(SP.KEY_SELECTION_IGNORE_SELF):
 			subjects_array.erase(owner)
-		var select_return = cfc.ov_utils.select_card(
+		var select_return = await cfc.ov_utils.select_card(
 				subjects_array, selection_count, selection_type, selection_optional, cfc.NMAP.board)
 		# In case the owner card is still focused (say because script was triggered
 		# on double-click and card was not moved
@@ -120,8 +118,7 @@ func _find_subjects(prev_subjects := [], stored_integer := 0) -> Array:
 				for c in owner.get_parent().get_all_cards():
 					c.interruptTweening()
 					c.reorganize_self()
-		if select_return is GDScriptFunctionState: # Still working.
-			select_return = yield(select_return, "completed")
+
 			# If the return is not an array, it means that the selection
 			# was cancelled (either because there were not enough cards
 			# or because the player pressed cancel
@@ -217,7 +214,7 @@ func _index_seek_subjects(stored_integer: int) -> Array:
 		if get_property(SP.KEY_IS_INVERTED):
 			index *= -1
 	# Just to prevent typos since we don't enforce integers on index
-	elif not str(index).is_valid_integer():
+	elif not str(index).is_valid_int():
 		index = 0
 	var subject_count = get_property(SP.KEY_SUBJECT_COUNT)
 	# If the subject count is ALL, we retrieve as many cards as
@@ -278,10 +275,10 @@ func _initiate_card_targeting() -> Card:
 	# We wait a centisecond, to prevent the card's _input function from seeing
 	# The double-click which started the script and immediately triggerring
 	# the target completion
-	yield(owner.get_tree().create_timer(0.1), "timeout")
+	await owner.get_tree().create_timer(0.1)
 	owner.targeting_arrow.initiate_targeting()
 	# We wait until the targetting has been completed to continue
-	yield(owner.targeting_arrow,"target_selected")
+	await owner.ToSignal(owner.targeting_arrow,"target_selected")
 	var target = owner.targeting_arrow.target_object
 	owner.targeting_arrow.target_object = null
 	#owner_card.target_object = null
@@ -342,14 +339,14 @@ func sort_subjects(subject_list: Array) -> Array:
 					"card": c,
 					"value": c.tokens.get_token_count(thing)
 				})
-		sorting_list.sort_custom(CFUtils,'sort_by_card_field')
+		sorting_list.sort_custom(Callable(CFUtils,'sort_by_card_field'))
 		# Once we've sorted the items, we put just the card objects
 		# in a new list, which we return to the player.
 		for d in sorting_list:
 			sorted_subjects.append(d.card)
 	# If we want a descending list, we invert the subject list
 	if get_property(SP.KEY_SORT_DESCENDING):
-		sorted_subjects.invert()
+		sorted_subjects.reverse()
 	return(sorted_subjects)
 
 
@@ -392,7 +389,7 @@ func parse_replacements() -> void:
 											card.canonical_name
 								else:
 									property_filters[property] =\
-											card.get_property(property)
+											await card.get_property(property)
 					# This branch checks for replacements for
 					# filter_tokens
 					# We have to go to each dictionary for filter_tokens
@@ -410,8 +407,8 @@ func parse_replacements() -> void:
 									card = owner
 								else:
 									card = trigger_object
-								var owner_token_count :=\
-										card.tokens.get_token_count(
+								var owner_token_count : Variant =\
+										await card.tokens.get_token_count(
 										token_filters["filter_" + SP.KEY_TOKEN_NAME])
 								token_filters[SP.FILTER_COUNT] =\
 										owner_token_count

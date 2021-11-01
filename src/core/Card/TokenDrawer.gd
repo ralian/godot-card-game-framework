@@ -8,9 +8,10 @@ const _TOKEN_SCENE_FILE = CFConst.PATH_CORE + "Token.tscn"
 const _TOKEN_SCENE = preload(_TOKEN_SCENE_FILE)
 
 # A flag on whether the token drawer is currently open
-var is_drawer_open := false setget set_is_drawer_open
+var is_drawer_open := false:
+	set = set_is_drawer_open
 
-@onready var _tween : Tween = $Tween
+@onready var _tween = $Tween
 # Stores a reference to the Card that is hosting this node
 @onready var owner_card = get_parent().get_parent()
 
@@ -85,7 +86,7 @@ func token_drawer(requested_state := true) -> void:
 			# We want to consider the drawer closed
 			# only when the animation finished
 			# Otherwise it might start to open immediately again
-			yield(_tween, "tween_all_completed")
+			await _tween.ToSignal(_tween, "tween_all_completed")
 			# When it's closed, we hide token names
 			for token in $Drawer/VBoxContainer.get_children():
 				token.retract()
@@ -194,7 +195,7 @@ func get_token_count(token_name: String) -> int:
 	if not token:
 		return(0)
 	else:
-		return(token.get_count())
+		return(await token.get_count())
 
 
 # Returns true, when the mouse cursor is over the drawer.

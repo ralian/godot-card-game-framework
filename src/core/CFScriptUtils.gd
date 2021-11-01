@@ -53,7 +53,7 @@ static func get_altered_value(
 						state_scripts,
 						task_details)
 				if not alteng.all_alterations_completed:
-					yield(alteng,"alterations_completed")
+					await alteng.ToSignal(alteng,"alterations_completed")
 				value_alteration += alteng.alteration
 				# We don't want to register alterants which didn't modify the number.
 				if alteng.alteration != 0:

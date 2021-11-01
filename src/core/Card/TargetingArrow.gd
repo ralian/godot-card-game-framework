@@ -89,7 +89,7 @@ func _on_ArrowHead_area_exited(area: Area2D) -> void:
 		if 'highlight' in area:
 			area.highlight.set_highlight(false)
 		# Finally, we make sure we highlight any other cards we're still hovering
-		if not _potential_targets.empty() and 'highlight' in owner_object:
+		if not _potential_targets.is_empty() and 'highlight' in owner_object:
 			owner_object.highlight.highlight_potential_card(
 				CFConst.TARGET_HOVER_COLOUR,
 				_potential_targets)

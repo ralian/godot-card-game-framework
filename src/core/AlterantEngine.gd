@@ -47,17 +47,15 @@ func calculate_next_alteration(
 		alterant_object,
 		scripts_queue: Array,
 		task_details: Dictionary) -> void:
-	if scripts_queue.empty():
+	if scripts_queue.size() == 0:
 		all_alterations_completed = true
 		emit_signal("alterations_completed")
 	else:
-		var script := ScriptAlter.new(
+		var script : Variant = await ScriptAlter.new(
 				scripts_queue.pop_front(),
 				trigger_object,
 				alterant_object,
 				task_details)
-		if not script.is_primed:
-			yield(script,"primed")
 		if script.is_valid:
 			calculate_alteration(script)
 		# At the end of the run, we loop back to the start, but of course

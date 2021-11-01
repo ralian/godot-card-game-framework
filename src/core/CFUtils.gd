@@ -7,8 +7,7 @@ extends RefCounted
 # The path to the optional confirm scene. This has to be defined explicitly
 # here, in order to use it in its preload, otherwise the parser gives an error
 const _OPTIONAL_CONFIRM_SCENE_FILE = CFConst.PATH_CORE + "OptionalConfirmation.tscn"
-const _OPTIONAL_CONFIRM_SCENE = preload(_OPTIONAL_CONFIRM_SCENE_FILE)
-
+const _OPTIONAL_CONFIRM_SCENE = null#preload(_OPTIONAL_CONFIRM_SCENE_FILE)
 
 # Randomize array through our own seed
 static func shuffle_array(array: Array) -> void:
@@ -122,10 +121,15 @@ static func confirm(
 	# We do not use SP.KEY_IS_OPTIONAL here to avoid causing cyclical
 	# references when calling CFUtils from SP
 	if script.get("is_optional_" + type):
-		var confirm = _OPTIONAL_CONFIRM_SCENE.instance()
+		var confirm = load(_OPTIONAL_CONFIRM_SCENE_FILE).instance()
 		confirm.prep(card_name,task_name)
 		# We have to wait until the player has finished selecting an option
-		yield(confirm,"selected")
+		
+		# This is a gross hack for 4.0. There's no static version of ToSignal
+		# in Object yet, so use confirm.ToSignal. Probably a better way that
+		# I'm missing. TODO
+		await confirm.ToSignal(confirm,"selected")
+		
 		# If the player selected "No", we don't execute anything
 		if not confirm.is_accepted:
 			is_accepted = false
@@ -210,7 +214,7 @@ static func generate_random_seed() -> String:
 	randomize()
 	var rnd_seed : String = ""
 	for _iter in range(10):
-		rnd_seed +=  char(int(rand_range(40,127)))
+		rnd_seed +=  char(int(randi_range(40,127)))
 	return(rnd_seed)
 
 
@@ -285,7 +289,7 @@ static func get_unique_values(property: String) -> Array:
 # (which you get with `preload()`)
 # into an ImageTexture you can assign to a node's texture property.
 static func convert_texture_to_image(texture, is_lossless = false) -> ImageTexture:
-	var tex: StreamTexture
+	var tex: StreamTexture2D
 	if typeof(texture) == TYPE_STRING:
 		tex = load(texture)
 	else:

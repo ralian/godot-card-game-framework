@@ -6,7 +6,8 @@ extends Panel
 var viewed_node
 # This bool will be set to true when we want to signify that the card is viewed
 # while face down.
-var is_viewed_visible : bool setget set_is_viewed_visible
+var is_viewed_visible : bool:
+	set = set_is_viewed_visible
 
 # Stores a reference to the Card that is hosting this node
 @onready var card_owner = get_parent().get_parent().get_parent()
@@ -21,7 +22,7 @@ func set_is_viewed_visible(value: bool) -> void:
 	if viewed_node:
 		viewed_node.visible = value
 	else:
-		print("WARNING: viewed_node has not been defined in the card back: " + name)
+		print("WARNING: viewed_node has not been defined in the card back: " + str(name))
 
 
 # Each class which extends this has to overwrite this function

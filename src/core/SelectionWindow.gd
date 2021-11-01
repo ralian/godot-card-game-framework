@@ -10,8 +10,8 @@ const _INFO_PANEL_SCENE_FILE = CFConst.PATH_CORE\
 		+ "CardViewer/CVInfoPanel.tscn"
 const _INFO_PANEL_SCENE = preload(_INFO_PANEL_SCENE_FILE)
 
-export(PackedScene) var grid_card_object_scene := _GRID_CARD_OBJECT_SCENE
-export(PackedScene) var info_panel_scene := _INFO_PANEL_SCENE
+@export var grid_card_object_scene : PackedScene = _GRID_CARD_OBJECT_SCENE
+@export var info_panel_scene : PackedScene= _INFO_PANEL_SCENE
 
 var selected_cards := []
 var selection_count : int
@@ -35,19 +35,19 @@ func _process(_delta):
 	match selection_type:
 		"min":
 			if current_count < selection_count:
-				get_ok().disabled = true
+				get_ok_button().disabled = true
 			else:
-				get_ok().disabled = false
+				get_ok_button().disabled = false
 		"equal":
 			if current_count != selection_count:
-				get_ok().disabled = true
+				get_ok_button().disabled = true
 			else:
-				get_ok().disabled = false
+				get_ok_button().disabled = false
 		"max":
 			if current_count > selection_count:
-				get_ok().disabled = true
+				get_ok_button().disabled = true
 			else:
-				get_ok().disabled = false
+				get_ok_button().disabled = false
 
 
 # Populates the selection window with duplicates of the possible cards
@@ -59,14 +59,15 @@ func initiate_selection(
 		_selection_optional := false) -> void:
 	# We don't allow the player to close the popup with the close button
 	# as that will not send the mandatory signal to unpause the game
-	get_close_button().visible = false
+	# This isn't a thing anymore?
+	#get_close_button().visible = false
 	selection_count = _selection_count
 	selection_type = _selection_type
 	is_selection_optional = _selection_optional
 	# If the selection is optional, we allow the player to cancel out
 	# of the popup
 	if is_selection_optional:
-		var cancel_button := add_cancel("Cancel")
+		var cancel_button := add_cancel_button("Cancel")
 		# warning-ignore:return_value_discarded
 		cancel_button.connect("pressed",Callable(self, "_on_cancel_pressed"))
 	# If the amount of cards available for the choice are below the requirements
@@ -88,14 +89,14 @@ func initiate_selection(
 	# We change the window title to be descriptive
 	match selection_type:
 		"min":
-			window_title = "Select at least " + str(selection_count) + " cards."
+			title = "Select at least " + str(selection_count) + " cards."
 		"max":
-			window_title = "Select at most " + str(selection_count) + " cards."
+			title = "Select at most " + str(selection_count) + " cards."
 		"equal":
-			window_title = "Select exactly " + str(selection_count) + " cards."
+			title = "Select exactly " + str(selection_count) + " cards."
 		"display":
-			window_title = "Press OK to continue"
-			popup_exclusive = false
+			title = "Press OK to continue"
+			exclusive = false
 	for c in _card_grid.get_children():
 		c.queue_free()
 	# for each card that the player needs to select amonst
@@ -129,11 +130,15 @@ func initiate_selection(
 	var popup_size_x = (CFConst.CARD_SIZE.x * CFConst.THUMBNAIL_SCALE * shown_columns)\
 			+ _card_grid.get("custom_constants/vseparation") * shown_columns
 	# The height will be automatically adjusted based on the amount of cards
-	rect_size = Vector2(popup_size_x,0)
-	popup_centered_minsize()
+	#size = Vector2i(popup_size_x,0)
+	
+	# This used to be popup_centered_minsize() but I think you have to do this now
+	size = min_size
+	popup_centered()
+	
 	# Spawning all the duplicates is a bit heavy
 	# So we delay showing the tween to avoid having it look choppy
-	yield(get_tree().create_timer(0.2), "timeout")
+	await get_tree().create_timer(0.2)
 	_tween.remove_all()
 	# We do a nice alpha-modulate tween
 	_tween.interpolate_property(self,'modulate:a',

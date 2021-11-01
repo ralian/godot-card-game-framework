@@ -4,7 +4,8 @@ class_name Token
 extends HBoxContainer
 
 
-export var count := 0 setget set_count, get_count
+@export var count := 0:
+	set = set_count, get = get_count
 
 var token_drawer
 
@@ -55,7 +56,7 @@ func set_count(value := 1) -> void:
 
 # Returns the amount of tokens of this type
 func get_count() -> int:
-	return(get_count_and_alterants().count)
+	return((await get_count_and_alterants()).count)
 
 
 # Discovers the modified value of this token
@@ -73,13 +74,11 @@ func get_count_and_alterants() -> Dictionary:
 	# We do this check because in UT the token might not be
 	# assigned to a token_drawer
 	if token_drawer:
-		alteration = CFScriptUtils.get_altered_value(
+		alteration = await CFScriptUtils.get_altered_value(
 			token_drawer.owner_card,
 			"get_token",
 			{SP.KEY_TOKEN_NAME: name,},
 			count)
-		if alteration is GDScriptFunctionState:
-			alteration = yield(alteration, "completed")
 	var return_dict := {
 		"count": count + alteration.value_alteration,
 		"alteration": alteration

@@ -117,8 +117,8 @@ signal card_targeted(card,trigger,details)
 @export var is_viewed := false:
 	set = set_is_viewed, get = get_is_viewed
 # Specifies the card rotation in increments of 90 degrees
-@export_range(0, 270, 90) var card_rotation := 0:
-		set = set_card_rotation, get = get_card_rotation
+@export_range(0, 270, 90) var card_rotation := 0#:
+		#set = set_card_rotation, get = get_card_rotation
 # Specifies where on the board the card may be placed
 @export var board_placement:BoardPlacement = BoardPlacement.ANYWHERE
 @export var mandatory_grid_name : String
@@ -178,11 +178,11 @@ signal card_targeted(card,trigger,details)
 # If not set, will be set to the value of the Name label in the front.
 # if that is also not set, will be set.
 # to the human-readable value of the "name" node property.
-var canonical_name : String:
-	set = set_card_name, get = get_card_name
+var canonical_name : String#:
+	#set = set_card_name, get = get_card_name
 # Ensures all nodes fit inside this rect.
-var card_size := CFConst.CARD_SIZE:
-	set = set_card_size
+var card_size := CFConst.CARD_SIZE#:
+	#set = set_card_size
 # Starting state for each card
 var state : int = CardState.PREVIEW
 # If this card is hosting other cards,
@@ -192,8 +192,8 @@ var attachments := []
 # this tracks who its host is.
 var current_host_card : Card = null
 # If true, the card will be displayed faceup. If false, it will be facedown
-var is_faceup := true:
-	set = set_is_faceup, get = get_is_faceup
+var is_faceup := true#:
+	#set = set_is_faceup, get = get_is_faceup
 # Used to keep the card and mouse cursor in sync when dragging the card around
 # Represents the cursor's position relative to the card origin when drag was initiated
 var _drag_offset: Vector2
@@ -213,7 +213,7 @@ var potential_host: Card = null
 var potential_container = null
 # If the card is placed in a placement grid, this will hold
 # a reference to the slot where this card is placed
-var _placement_slot : BoardPlacementSlot = null
+var _placement_slot = null
 # This hold modifiers to card properties that will be active temporarily.
 # This avoids triggering the card_properties_modified signal.
 #
@@ -313,7 +313,7 @@ func _init_card_layout() -> void:
 # Ensures that the canonical card name is set in all fields which use it.
 #  var canonical_name, "Name" label and self.name should use the same string.
 func _init_card_name() -> void:
-	if not canonical_name:
+	if canonical_name == null:
 		# The node name changes depeding on how many other cards
 		# with the same node name are siblings
 		# We use this regex to discover the actual name
@@ -444,18 +444,18 @@ func _on_Card_gui_input(event) -> void:
 					# We also check if another card is already selected for dragging,
 					# to prevent from picking 2 cards at the same time.
 					if cfc.card_drag_ongoing == self:
-						if state == CardState.FOCUSED_IN_HAND\
+						if state == int(CardState.FOCUSED_IN_HAND)\
 								and  _has_targeting_cost_hand_script():
-							var _sceng = execute_scripts()
+							var _sceng = await execute_scripts()
 							cfc.card_drag_ongoing = null
-						elif state == CardState.FOCUSED_IN_HAND\
+						elif state == int(CardState.FOCUSED_IN_HAND)\
 								and (disable_dragging_from_hand
 								or check_play_costs() == CFConst.CostsState.IMPOSSIBLE):
 							cfc.card_drag_ongoing = null
-						elif state == CardState.FOCUSED_ON_BOARD \
+						elif state == int(CardState.FOCUSED_ON_BOARD) \
 								and disable_dragging_from_board:
 							cfc.card_drag_ongoing = null
-						elif state == CardState.FOCUSED_IN_POPUP \
+						elif state == int(CardState.FOCUSED_IN_POPUP) \
 								and disable_dragging_from_pile:
 							cfc.card_drag_ongoing = null
 						else:
@@ -515,7 +515,7 @@ func setup() -> void:
 	set_card_name(canonical_name)
 	# The properties of the card should be already stored in cfc
 	var read_properties: Dictionary
-	if state != CardState.VIEWPORT_FOCUS:
+	if state != int(CardState.VIEWPORT_FOCUS):
 		read_properties = cfc.card_definitions.get(canonical_name, {})
 	else:
 		read_properties = properties.duplicate()
@@ -658,7 +658,7 @@ func modify_property(
 # properties.get() as it takes into account the temp_properties_modifiers var
 # and also checks for alterant scripts
 func get_property(property: String):
-	return(get_property_and_alterants(property).value)
+	return((await get_property_and_alterants(property)).value)
 
 
 # Discovers the modified value of the specified property based
@@ -688,7 +688,7 @@ func get_property_and_alterants(property: String,
 		# effect a temp_modifier would have on a card subject, before
 		# a subject was selected.
 		if use_global_temp_mods\
-				and temp_properties_modifiers.empty()\
+				and temp_properties_modifiers.is_empty()\
 				and not cfc.card_temp_property_modifiers.empty():
 			tmp_mods = cfc.card_temp_property_modifiers
 		else:
@@ -706,13 +706,11 @@ func get_property_and_alterants(property: String,
 		# by filtering the card's properties, causing an infinite loop.
 		if not _is_property_being_altered:
 			_is_property_being_altered = true
-			alteration = CFScriptUtils.get_altered_value(
+			alteration = await CFScriptUtils.get_altered_value(
 				self,
 				"get_property",
 				{SP.KEY_PROPERTY_NAME: property,},
 				properties.get(property))
-			if alteration is GDScriptFunctionState:
-				alteration = await(alteration)
 			_is_property_being_altered = false
 			# The first element is always the total modifier from all alterants
 			property_value += alteration.value_alteration
@@ -802,7 +800,7 @@ func set_is_faceup(
 		# We make sure to remove other tweens of the same type to avoid a deadlock
 		is_faceup = value
 		# When we change faceup state, we reset the is_viewed to false
-		if set_is_viewed(false) == CFConst.ReturnCode.FAILED:
+		if set_is_viewed(false) == int(CFConst.ReturnCode.FAILED):
 			print("ERROR: Something went unexpectedly in set_is_faceup")
 		if value:
 			_flip_card($Control/Back, $Control/Front,instant)
@@ -817,7 +815,7 @@ func set_is_faceup(
 			card_back.start_card_back_animation()
 		# When we flip, we also want to adjust the dupe card
 		# in the focus viewport
-		if state != CardState.VIEWED_IN_PILE\
+		if state != int(CardState.VIEWED_IN_PILE)\
 				and cfc.NMAP.get("main", null)\
 				and cfc.NMAP.main._previously_focused_cards.has(self):
 			var dupe_card : Card = cfc.NMAP.main._previously_focused_cards[self]
@@ -863,7 +861,7 @@ func set_is_viewed(value: bool) -> int:
 			retcode = CFConst.ReturnCode.OK
 		else:
 			is_viewed = true
-			if state != CardState.VIEWED_IN_PILE\
+			if state != int(CardState.VIEWED_IN_PILE)\
 					and cfc.NMAP.get("main", null)\
 					and cfc.NMAP.main._previously_focused_cards.has(self):
 				var dupe_card : Card = cfc.NMAP.main._previously_focused_cards[self]
@@ -1152,7 +1150,7 @@ func move_to(targetHost: Node,
 				if c != self:
 					c.interruptTweening()
 					c.reorganize_self()
-			if set_is_faceup(true) == CFConst.ReturnCode.FAILED:
+			if set_is_faceup(true) == int(CFConst.ReturnCode.FAILED):
 				print("ERROR: Something went unexpectedly in set_is_faceup")
 		elif targetHost.is_in_group("piles"):
 			# The below checks if the pile we're moving is in a popup
@@ -1190,16 +1188,16 @@ func move_to(targetHost: Node,
 				# We start the flipping animation here, even though it also
 				# set in the card state, because we want to see it while the
 				# card is moving to the CardContainer
-				if set_is_faceup(targetHost.faceup_cards) == CFConst.ReturnCode.FAILED:
+				if set_is_faceup(targetHost.faceup_cards) == int(CFConst.ReturnCode.FAILED):
 					print("ERROR: Something went unexpectedly in set_is_faceup")
 				# If we have fancy movement, we need to wait for 2 tweens to finish
 				# before we reorganize the stack.
 				# One for the fancy move, and then the move to the final position.
 				# If we don't then the card will appear to teleport
 				# to the pile before starting animation
-				await ToSignal($Tween, "tween_all_completed")
+				await $Tween.ToSignal($Tween, "tween_all_completed")
 				if cfc.game_settings.fancy_movement:
-					await ToSignal($Tween, "tween_all_completed")
+					await $Tween.ToSignal($Tween, "tween_all_completed")
 				targetHost.reorganize_stack()
 		else:
 			interruptTweening()
@@ -1342,17 +1340,15 @@ func execute_scripts(
 	# There should be an SP.KEY_IS_OPTIONAL definition per state
 	# E.g. if board scripts are optional, but hand scripts are not
 	# Then you'd include an "is_optional_board" key at the same level as "board"
-	var confirm_return = CFUtils.confirm(
+	var confirm_return = await CFUtils.confirm(
 		card_scripts,
 		canonical_name,
 		trigger,
 		state_exec)
-	if confirm_return is GDScriptFunctionState: # Still working.
-		confirm_return = await ToSignal(confirm_return, "completed")
-		# If the player chooses not to play an optional cost
-		# We consider the whole cost dry run unsuccesful
-		if not confirm_return:
-			state_scripts = []
+	# If the player chooses not to play an optional cost
+	# We consider the whole cost dry run unsuccesful
+	if not confirm_return:
+		state_scripts = []
 
 	# If the state_scripts return a dictionary entry
 	# it means it's a multiple choice between two scripts
@@ -1360,7 +1356,7 @@ func execute_scripts(
 		var choices_menu = _CARD_CHOICES_SCENE.instance()
 		choices_menu.prep(canonical_name,state_scripts)
 		# We have to wait until the player has finished selecting an option
-		await ToSignal(choices_menu,"id_pressed")
+		await choices_menu.ToSignal(choices_menu,"id_pressed")
 		# If the player just closed the pop-up without choosing
 		# an option, we don't execute anything
 		if choices_menu.id_selected:
@@ -1388,7 +1384,7 @@ func execute_scripts(
 		# execution until targetting has completed
 		sceng.execute(CFInt.RunType.COST_CHECK)
 		if not sceng.all_tasks_completed:
-			await ToSignal(sceng,"tasks_completed")
+			await sceng.ToSignal(sceng,"tasks_completed")
 		# If the dry-run of the ScriptingEngine returns that all
 		# costs can be paid, then we proceed with the actual run
 		if sceng.can_all_costs_be_paid and not only_cost_check:
@@ -1398,20 +1394,16 @@ func execute_scripts(
 			# as it causes a cyclic reference error when parsing
 			sceng.execute()
 			if not sceng.all_tasks_completed:
-				await ToSignal(sceng,"tasks_completed")
+				await sceng.ToSignal(sceng,"tasks_completed")
 			# warning-ignore:void_assignment
-			var func_return = common_post_execution_scripts(trigger)
-			# We make sure this function does to return until all
-			# custom post execution scripts have also finished
-			if func_return is GDScriptFunctionState: # Still working.
-				func_return = await ToSignal(func_return, "completed")
+			var func_return = await common_post_execution_scripts(trigger)
 		# This will only trigger when costs could not be paid, and will
 		# execute the "is_else" tasks
 		elif not sceng.can_all_costs_be_paid and not only_cost_check:
 			#print("DEBUG:" + str(state_scripts))
 			sceng.execute(CFInt.RunType.ELSE)
 			if not sceng.all_tasks_completed:
-				await ToSignal(sceng,"tasks_completed")
+				await sceng.ToSignal(sceng,"tasks_completed")
 		is_executing_scripts = false
 	return(sceng)
 
@@ -1428,7 +1420,7 @@ func retrieve_scripts(trigger: String) -> Dictionary:
 	#
 	# This allows us to modify a card's scripts during runtime
 	# in isolation from other cards of the same name
-	if not scripts.empty() and not scripts.get(trigger,{}).empty():
+	if not scripts.is_empty() and not scripts.get(trigger,{}).is_empty():
 		found_scripts = scripts.get(trigger,{}).duplicate(true)
 	else:
 		# This retrieves all the script from the card, stored in cfc
@@ -1570,7 +1562,7 @@ func interruptTweening() ->void:
 	# move to another container movement, then you can interrupt.
 	if not cfc.game_settings.fancy_movement or (cfc.game_settings.fancy_movement
 			and (_fancy_move_second_part
-			or state != CardState.MOVING_TO_CONTAINER)):
+			or state != int(CardState.MOVING_TO_CONTAINER))):
 		$Tween.remove_all()
 		state = CardState.IN_HAND
 
@@ -1613,7 +1605,7 @@ func set_to_idle() -> void:
 	]:
 		if state in [CardState.FOCUSED_IN_HAND, CardState.PUSHED_ASIDE]:
 			reorganize_self()
-		elif not state == CardState.REORGANIZING:
+		elif not state == int(CardState.REORGANIZING):
 			_determine_idle_state()
 
 
@@ -1674,7 +1666,7 @@ func animate_shuffle(anim_speed : float, style : int) -> void:
 	var rot_anim
 	var pos_speed := anim_speed
 	var rot_speed := anim_speed
-	if style == CFConst.ShuffleStyle.CORGI:
+	if style == int(CFConst.ShuffleStyle.CORGI):
 		csize = card_size * 0.65
 		random_x = CFUtils.randf_range(- csize.x, csize.x)
 		random_y = CFUtils.randf_range(- csize.y, csize.y)
@@ -1685,7 +1677,7 @@ func animate_shuffle(anim_speed : float, style : int) -> void:
 		end_pos_anim = Tween.TRANS_CIRC
 		rot_anim = Tween.TRANS_CIRC
 	# 2 is splash
-	elif style == CFConst.ShuffleStyle.SPLASH:
+	elif style == int(CFConst.ShuffleStyle.SPLASH):
 		csize = card_size * 0.85
 		random_x = CFUtils.randf_range(- csize.x, csize.x)
 		random_y = CFUtils.randf_range(- csize.y, csize.y)
@@ -1696,7 +1688,7 @@ func animate_shuffle(anim_speed : float, style : int) -> void:
 		end_pos_anim = Tween.TRANS_QUAD
 		rot_anim = Tween.TRANS_CIRC
 		pos_speed = pos_speed
-	elif style == CFConst.ShuffleStyle.SNAP:
+	elif style == int(CFConst.ShuffleStyle.SNAP):
 		csize = card_size
 		center_card_pop_position.y = starting_card_position.y \
 				+ card_size.y
@@ -1704,7 +1696,7 @@ func animate_shuffle(anim_speed : float, style : int) -> void:
 		end_pos_anim = Tween.TRANS_ELASTIC
 		rot_anim = null
 		pos_speed = pos_speed
-	elif style == CFConst.ShuffleStyle.OVERHAND:
+	elif style == int(CFConst.ShuffleStyle.OVERHAND):
 		csize = card_size * 1.1
 		random_x = CFUtils.randf_range(- csize.x/10, csize.x/10)
 		random_y = CFUtils.randf_range(- csize.y, - csize.y/2)
@@ -1719,7 +1711,7 @@ func animate_shuffle(anim_speed : float, style : int) -> void:
 	if rot_anim:
 		_add_tween_rotation(0,random_rot,rot_speed,rot_anim,Tween.EASE_OUT)
 	_tween.start()
-	await ToSignal(_tween, "tween_all_completed")
+	await _tween.ToSignal(_tween, "tween_all_completed")
 	_add_tween_position(center_card_pop_position,starting_card_position,
 			pos_speed,end_pos_anim,Tween.EASE_IN)
 	if rot_anim:
@@ -2027,7 +2019,7 @@ func _flip_card(to_invisible: Control, to_visible: Control, instant := false) ->
 				(highlight.rect_size.x-3)/2,0), 0.4,
 				Tween.TRANS_QUAD, Tween.EASE_IN)
 		_flip_tween.start()
-		await ToSignal(_flip_tween, "tween_all_completed")
+		await _flip_tween.ToSignal(_flip_tween, "tween_all_completed")
 		to_visible.visible = true
 		to_invisible.visible = false
 		_flip_tween.interpolate_property(to_visible,'rect_scale',
@@ -2265,17 +2257,17 @@ func _process_card_state() -> void:
 					_add_tween_global_position(global_position, intermediate_position,
 						to_container_tween_duration)
 					$Tween.start()
-					await ToSignal($Tween, "tween_all_completed")
+					await $Tween.ToSignal($Tween, "tween_all_completed")
 					_tween_stuck_time = 0
 					_fancy_move_second_part = true
 				# We need to check again, just in case it's been reorganized instead.
-				if state == CardState.MOVING_TO_CONTAINER:
+				if state == int(CardState.MOVING_TO_CONTAINER):
 					_add_tween_position(position, _target_position,
 						to_container_tween_duration, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
 					_add_tween_rotation($Control.rect_rotation,_target_rotation,
 						to_container_tween_duration)
 					$Tween.start()
-					await ToSignal($Tween, "tween_all_completed")
+					await $Tween.ToSignal($Tween, "tween_all_completed")
 					_determine_idle_state()
 				_fancy_move_second_part = false
 
@@ -2516,12 +2508,13 @@ func _get_angle_by_index(index_diff = null) -> float:
 	var card_angle = max(min(60 / hand_size, card_angle_max), card_angle_min)
 	# When foucs hand, the card needs to be offset by a certain angle
 	# The current practice is just to find a suitable expression function, if there is a better function, please replace this function: - sign(index_diff) * (1.95-0.3*index_diff*index_diff) * min(card_angle,5)
+	var cur_index_diff = 0
 	if index_diff != null:
-		return 90 + (half - index) * card_angle \
-				- sign(index_diff) * (1.95 - 0.3 * index_diff * index_diff) \
-				* min(card_angle, 5)
-	else:
-		return 90 + (half - index) * card_angle
+		cur_index_diff = index_diff
+	
+	return 90 + (half - index) * card_angle \
+			- sign(cur_index_diff) * (1.95 - 0.3 * cur_index_diff * cur_index_diff) \
+			* min(card_angle, 5)
 
 
 # Get card angle in hand by index that use oval shape
@@ -2627,9 +2620,12 @@ func _recalculate_position_use_rectangle(index_diff = null)-> Vector2:
 	# Since our control container has the same size as the cards,we start from 0
 	# and just offset the card if we want it higher or lower.
 	card_position_y = 0
+	
+	var cur_index_diff = 0
 	if index_diff!=null:
+		cur_index_diff = index_diff
 		return(Vector2(card_position_x, card_position_y)
-				+ Vector2(card_size.x / index_diff * CFConst.NEIGHBOUR_PUSH, 0))
+				+ Vector2(card_size.x / cur_index_diff * CFConst.NEIGHBOUR_PUSH, 0))
 	else:
 		return(Vector2(card_position_x,card_position_y))
 

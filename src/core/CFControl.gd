@@ -43,7 +43,7 @@ var signal_propagator = SignalPropagator.new()
 # A dictionary of all our container nodes for easy access
 var NMAP: Dictionary
 # The card actively being dragged
-var card_drag_ongoing: Card = null
+var card_drag_ongoing = null
 # Switch used for seeing debug info
 var _debug := false
 # Game random number generator
@@ -171,7 +171,7 @@ func set_seed(_seed) -> void:
 
 
 # Instances and returns a Card object, based on its name.
-func instance_card(card_name: String) -> Card:
+func instance_card(card_name: String):
 	# We discover the template from the "Type"  property defined
 	# in each card. Any property can be used
 	var template = load(CFConst.PATH_CARDS
@@ -181,10 +181,46 @@ func instance_card(card_name: String) -> Card:
 	card.canonical_name = card_name
 	return(card)
 
+# I'm putting this in here temporarily. The parser hates me and won't load
+# the static function in CFUtils.
+static func list_imported_in_directory(path: String) -> Array:
+	var files := []
+	var dir := Directory.new()
+	# warning-ignore:return_value_discarded
+	dir.open(path)
+	# warning-ignore:return_value_discarded
+	dir.list_dir_begin()
+	while true:
+		var file := dir.get_next()
+		if file == "":
+			break
+		elif file.ends_with(".import"):
+			files.append(file.rstrip(".import"))
+	dir.list_dir_end()
+	return(files)
+static func list_files_in_directory(path: String, prepend_needed := "") -> Array:
+	var files := []
+	var dir := Directory.new()
+	# warning-ignore:return_value_discarded
+	dir.open(path)
+	# warning-ignore:return_value_discarded
+	dir.list_dir_begin()
+	while true:
+		var file := dir.get_next()
+		if file == "":
+			break
+		elif not file.begins_with('.')\
+				and file.begins_with(prepend_needed)\
+				and not file.ends_with(".remap")\
+				and not file.ends_with(".import")\
+				and not file.ends_with(".md"):
+			files.append(file)
+	dir.list_dir_end()
+	return(files)
 
 # Returns a Dictionary with the combined Card definitions of all set files
 func load_card_definitions() -> Dictionary:
-	var set_definitions := CFUtils.list_files_in_directory(
+	var set_definitions = list_files_in_directory(
 				CFConst.PATH_SETS, CFConst.CARD_SET_NAME_PREPEND)
 	var combined_sets := {}
 	for set_file in set_definitions:
@@ -196,7 +232,7 @@ func load_card_definitions() -> Dictionary:
 
 # Returns a Dictionary with the combined Script definitions of all set files
 func load_script_definitions() -> Dictionary:
-	var script_definitions := CFUtils.list_files_in_directory(
+	var script_definitions = list_files_in_directory(
 				CFConst.PATH_SETS, CFConst.SCRIPT_SET_NAME_PREPEND)
 	var combined_scripts := {}
 	for card_name in card_definitions.keys():
@@ -236,7 +272,9 @@ func init_settings_from_file() -> void:
 	var file = File.new()
 	if file.file_exists(CFConst.SETTINGS_FILENAME):
 		file.open(CFConst.SETTINGS_FILENAME, File.READ)
-		var data = parse_json(file.get_as_text())
+		var json = JSON.new()
+		json.parse(file.get_as_text())
+		var data = json.get_data()
 		file.close()
 		if typeof(data) == TYPE_DICTIONARY:
 			game_settings = data.duplicate()
@@ -252,7 +290,7 @@ func reset_game() -> void:
 	card_drag_ongoing = null
 	cfc.NMAP.board.queue_free()
 	# We need to give Godot time to deinstance all nodes.
-	await get_tree().create_timer(0.1)
+	await get_tree().ToSignal(get_tree().create_timer(0.1), "timeout")
 	NMAP.clear()
 	main._ready()
 
@@ -307,7 +345,7 @@ class SignalPropagator:
 	# This method requirses that each signal also passes its own name in the
 	# trigger variable, is this is the key sought in the CardScriptDefinitions
 	func _on_signal_received(
-			trigger_card: Card, trigger: String, details: Dictionary):
+			trigger_card, trigger: String, details: Dictionary):
 		# We use Godot groups to ask every card to check if they
 		# have [ScriptingEngine] triggers for this signal.
 		#

@@ -8,7 +8,8 @@ var script_owner # Card type, but cannot type to avoid cyclic dependency
 var per_definitions: Dictionary
 var trigger_object = null
 var subjects := []
-var found_things := 0 setget ,count_found_things
+var found_things := 0:
+	get = count_found_things
 
 func _init(
 		_per_seek: String,

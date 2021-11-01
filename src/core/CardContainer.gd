@@ -13,28 +13,28 @@ extends Area2D
 # All other options will automatically adjust the position of the
 # CardContainer if the resolution changes
 enum Anchors{
-	NONE
-	TOP_RIGHT
-	TOP_MIDDLE
-	TOP_LEFT
-	RIGHT_MIDDLE
-	LEFT_MIDDLE
-	BOTTOM_RIGHT
-	BOTTOM_MIDDLE
-	BOTTOM_LEFT
+	NONE,
+	TOP_RIGHT,
+	TOP_MIDDLE,
+	TOP_LEFT,
+	RIGHT_MIDDLE,
+	LEFT_MIDDLE,
+	BOTTOM_RIGHT,
+	BOTTOM_MIDDLE,
+	BOTTOM_LEFT,
 	CONTROL
 }
 
 # Spefifies the anchor of the card on the screen layout
 # This placement will be retained as the window is resized.
-export(Anchors) var placement
+@export var placement : Anchors
 # In case of multiple CardContainers using the same anchor placement,
 # specifies whether this container should displace itself to make space
 # for the others, and how.
-export(CFInt.OverlapShiftDirection) var overlap_shift_direction
+@export var overlap_shift_direction : CFInt.OverlapShiftDirection
 # In case of multiple CardContainers using the same anchor placement
 # specifies which container should be displaced more.
-export(CFInt.IndexShiftPriority) var index_shift_priority
+@export var index_shift_priority : CFInt.IndexShiftPriority
 
 # Used for debugging
 var _debugger_hook := false
@@ -71,7 +71,7 @@ func _ready() -> void:
 	# "hand" should be one of them.
 	add_to_group("card_containers")
 	if not cfc.are_all_nodes_mapped:
-		yield(cfc, "all_nodes_mapped")
+		await cfc.ToSignal(cfc, "all_nodes_mapped")
 	_init_ui()
 	_init_signal()
 
@@ -175,7 +175,7 @@ func get_all_manipulation_buttons() -> Array:
 	var buttons = get_tree().get_nodes_in_group("manipulation_button")
 	var my_buttons = []
 	for button in buttons:
-		if is_a_parent_of(button):
+		if button.is_ancestor_of(self):
 			my_buttons.append(button)
 	return my_buttons
 
@@ -276,7 +276,7 @@ func translate_card_index_to_node_index(index: int) -> int:
 	if index > len(all_cards):
 		node_index = len(all_cards)
 		print("WARNING: Higher card index than hosted cards requested on "
-				+ name + ". Returning max position:" + str(node_index))
+				+ str(name) + ". Returning max position:" + str(node_index))
 	else:
 		# If the requester index is not higher than the number of cards
 		# We figure out which card has the index at the moment, and return

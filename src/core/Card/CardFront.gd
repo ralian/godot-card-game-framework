@@ -59,7 +59,7 @@ func set_label_text(node: Label, value):
 	value = _check_for_replacements(node, value)
 	# We add a yield here to allow the calling function to continue
 	# and thus avoid the game waiting for the label to resize
-	yield(get_tree(), "idle_frame")
+	await get_tree().ToSignal(get_tree(), "idle_frame")
 	var working_value: String
 	# If the label node has been set to uppercase the text
 	# Then we need to work off-of uppercased text value
@@ -124,7 +124,7 @@ func scale_to(scale_multiplier: float) -> void:
 		if scaled_fonts.get(l) != scale_multiplier:
 			scaled_fonts[l] = scale_multiplier
 			while card_labels[l] in resizing_labels:
-				yield(get_tree(), "idle_frame")
+				await get_tree().ToSignal(get_tree(), "idle_frame")
 			if card_labels[l] as RichTextLabel:
 				var label : RichTextLabel = card_labels[l]
 				call_deferred("set_rich_label_text",label, label.bbcode_text, true)
@@ -172,7 +172,7 @@ func set_rich_label_text(node: RichTextLabel, value: String, is_resize := false)
 	# Rich Text has no way to grab its total size without setting the bbcode first
 	# After we set the bbcode, we need to wait for the next frame for the label to adjust
 	# and then we can grab its height
-	yield(get_tree(), "idle_frame")
+	await get_tree().ToSignal(get_tree(), "idle_frame")
 	var bbcode_height = node.get_content_height()
 	# To save some time, we use the same trick we do in normal labels
 	# where we reduce the font size to fits its rect
@@ -183,7 +183,7 @@ func set_rich_label_text(node: RichTextLabel, value: String, is_resize := false)
 	if bbcode_height > label_size.y:
 		font_adjustment = _adjust_font_size(label_fonts["normal_font"], node.text, label_size)
 		_set_card_rtl_fonts(node, label_fonts, starting_font_size + font_adjustment)
-		yield(get_tree(), "idle_frame")
+		await get_tree().ToSignal(get_tree(), "idle_frame")
 		bbcode_height = node.get_content_height()
 #		print_debug(bbcode_height, ':', font_adjustment, ':', label_size.y)
 	# If the reduction of font sizes when checking against the normal font
@@ -198,7 +198,7 @@ func set_rich_label_text(node: RichTextLabel, value: String, is_resize := false)
 		font_adjustment -= 1
 		_set_card_rtl_fonts(node, label_fonts, starting_font_size + font_adjustment)
 		_assign_bbcode_text(node, value, starting_font_size + font_adjustment)
-		yield(get_tree(), "idle_frame")
+		await get_tree().ToSignal(get_tree(), "idle_frame")
 		bbcode_height = node.get_content_height()
 		# If we don't keep the card front face-up while setting the RTL,
 		# The bbcode_height will be returned as either 0 or 1000 after setting the

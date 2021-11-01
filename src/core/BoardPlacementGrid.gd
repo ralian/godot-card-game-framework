@@ -17,11 +17,11 @@ const _SLOT_SCENE_FILE = CFConst.PATH_CORE + "BoardPlacementSlot.tscn"
 const _SLOT_SCENE = preload(_SLOT_SCENE_FILE)
 
 # Set the highlight colour for all contained BoardPlacementSlot slots
-export(Color) var highlight = CFConst.TARGET_HOVER_COLOUR
+@export var highlight : Color = CFConst.TARGET_HOVER_COLOUR
 # If set to true, the grid will automatically add more slots
 # when find_available_slot() is used and there's no more available slots
 # (only useful when using the ScriptingEngine)
-export var auto_extend := false
+@export var auto_extend := false
 
 # Sets a custom label for this grid
 @onready var name_label = $Control/Label
@@ -65,7 +65,7 @@ func add_slot() -> BoardPlacementSlot:
 # Returns a slot that is not currently occupied by a card
 func find_available_slot() -> BoardPlacementSlot:
 	var found_slot : BoardPlacementSlot
-	if not get_available_slots().empty():
+	if not get_available_slots().is_empty():
 		found_slot = get_available_slots().front()
 	elif auto_extend:
 		found_slot = add_slot()
