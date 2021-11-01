@@ -13,16 +13,16 @@ const menu_switch_time = 0.35
 func _ready() -> void:
 	for option_button in v_buttons.get_children():
 		if option_button.has_signal('pressed'):
-			option_button.connect('pressed', self, 'on_button_pressed', [option_button.name])
+			option_button.connect('pressed', Callable(self, 'on_button_pressed'), [option_button.name])
 #	settings_menu.rect_position.x = get_viewport().size.x
 	deck_builder.rect_position.x = -get_viewport().size.x
 	card_library.rect_position.x = -get_viewport().size.x
 #	settings_menu.back_button.connect("pressed", self, "_on_Setings_Back_pressed")
 #	settings_menu.recover_prebuilts.connect("pressed", self, "_on_PreBuilts_pressed")
-	deck_builder.back_button.connect("pressed", self, "_on_DeckBuilder_Back_pressed")
-	card_library.back_button.connect("pressed", self, "_on_CardLibrary_Back_pressed")
+	deck_builder.back_button.connect("pressed", Callable(self, "_on_DeckBuilder_Back_pressed"))
+	card_library.back_button.connect("pressed", Callable(self, "_on_CardLibrary_Back_pressed"))
 	# warning-ignore:return_value_discarded
-	get_viewport().connect("size_changed", self, '_on_Menu_resized')
+	get_viewport().connect("size_changed", Callable(self, '_on_Menu_resized'))
 
 
 func on_button_pressed(_button_name : String) -> void:

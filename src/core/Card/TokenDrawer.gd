@@ -19,8 +19,7 @@ func _ready() -> void:
 	$Drawer/Area2D/CollisionShape2D.shape = \
 			$Drawer/Area2D/CollisionShape2D.shape.duplicate()
 	# warning-ignore:return_value_discarded
-	$Drawer/VBoxContainer.connect("sort_children", self,
-			"_on_VBoxContainer_sort_children")
+	$Drawer/VBoxContainer.connect("sort_children", Callable(self, "_on_VBoxContainer_sort_children"))
 
 
 func _process(_delta: float) -> void:

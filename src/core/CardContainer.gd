@@ -92,16 +92,16 @@ func _init_ui() -> void:
 # Registers signals for this node
 func _init_signal() -> void:
 	# warning-ignore:return_value_discarded
-	control.connect("mouse_entered", self, "_on_Control_mouse_entered")
+	control.connect("mouse_entered", Callable(self, "_on_Control_mouse_entered"))
 	# warning-ignore:return_value_discarded
-	control.connect("mouse_exited", self, "_on_Control_mouse_exited")
+	control.connect("mouse_exited", Callable(self, "_on_Control_mouse_exited"))
 	# warning-ignore:return_value_discarded
 	for button in get_all_manipulation_buttons():
-		button.connect("mouse_entered", self, "_on_button_mouse_entered")
+		button.connect("mouse_entered", Callable(self, "_on_button_mouse_entered"))
 		#button.connect("mouse_exited", self, "_on_button_mouse_exited")
-	shuffle_button.connect("pressed", self, '_on_Shuffle_Button_pressed')
+	shuffle_button.connect("pressed", Callable(self, '_on_Shuffle_Button_pressed'))
 	# warning-ignore:return_value_discarded
-	get_viewport().connect("size_changed",self,"_on_viewport_resized")
+	get_viewport().connect("size_changed",Callable(self,"_on_viewport_resized"))
 
 
 # Hides the container manipulation buttons when you stop hovering over them

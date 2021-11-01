@@ -264,7 +264,7 @@ func load_options_from_config_file(file_path, into):
 func apply_options(opts):
 	_tester = Gut.new()
 	get_root().add_child(_tester)
-	_tester.connect('tests_finished', self, '_on_tests_finished', [opts.should_exit, opts.should_exit_on_success])
+	_tester.connect('tests_finished', Callable(self, '_on_tests_finished'), [opts.should_exit, opts.should_exit_on_success])
 	_tester.set_yield_between_tests(true)
 	_tester.set_modulate(Color(1.0, 1.0, 1.0, min(1.0, float(opts.opacity) / 100)))
 	_tester.show()

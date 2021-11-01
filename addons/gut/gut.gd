@@ -188,7 +188,7 @@ func _ready():
 
 	add_child(_yield_timer)
 	_yield_timer.set_one_shot(true)
-	_yield_timer.connect('timeout', self, '_yielding_callback')
+	_yield_timer.connect('timeout', Callable(self, '_yielding_callback'))
 
 	_setup_gui()
 
@@ -244,12 +244,12 @@ func _setup_gui():
 	add_child(_gui)
 	_gui.set_anchor(MARGIN_RIGHT, ANCHOR_END)
 	_gui.set_anchor(MARGIN_BOTTOM, ANCHOR_END)
-	_gui.connect('run_single_script', self, '_on_run_one')
-	_gui.connect('run_script', self, '_on_new_gui_run_script')
-	_gui.connect('end_pause', self, '_on_new_gui_end_pause')
-	_gui.connect('ignore_pause', self, '_on_new_gui_ignore_pause')
-	_gui.connect('log_level_changed', self, '_on_log_level_changed')
-	var _foo = connect('tests_finished', _gui, 'end_run')
+	_gui.connect('run_single_script', Callable(self, '_on_run_one'))
+	_gui.connect('run_script', Callable(self, '_on_new_gui_run_script'))
+	_gui.connect('end_pause', Callable(self, '_on_new_gui_end_pause'))
+	_gui.connect('ignore_pause', Callable(self, '_on_new_gui_ignore_pause'))
+	_gui.connect('log_level_changed', Callable(self, '_on_log_level_changed'))
+	var _foo = connect('tests_finished', Callable(_gui, 'end_run'))
 
 func _add_scripts_to_gui():
 	var scripts = []
@@ -560,7 +560,7 @@ func _wait_for_done(result):
 	var print_after = 3
 
 	# callback method sets waiting to false.
-	result.connect(COMPLETED, self, '_on_test_script_yield_completed')
+	result.connect(COMPLETED, Callable(self, '_on_test_script_yield_completed'))
 	if(!_was_yield_method_called):
 		_lgr.log('-- Yield detected, waiting --', _lgr.fmts.yellow)
 
@@ -573,7 +573,7 @@ func _wait_for_done(result):
 		iter_counter += 1
 		_lgr.yield_text('waiting' + dots)
 		_wait_timer.start()
-		yield(_wait_timer, 'timeout')
+		await ToSignal(_wait_timer, 'timeout')
 		dots += '.'
 		if(dots.length() > 5):
 			dots = ''
@@ -1303,7 +1303,7 @@ func set_yield_time(time, text=''):
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 func set_yield_signal_or_time(obj, signal_name, max_wait, text=''):
-	obj.connect(signal_name, self, '_yielding_callback', [true])
+	obj.connect(signal_name, Callable(self, '_yielding_callback'), [true])
 	_yielding_to.obj = obj
 	_yielding_to.signal_name = signal_name
 

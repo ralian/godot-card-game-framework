@@ -11,9 +11,9 @@ var _load_decks_list := []
 
 func _ready() -> void:
 	# warning-ignore:return_value_discarded
-	get_popup().connect("index_pressed", self, "_on_deck_load")
+	get_popup().connect("index_pressed", Callable(self, "_on_deck_load"))
 	# warning-ignore:return_value_discarded
-	connect("about_to_show", self, "_on_about_to_show")
+	connect("about_to_show", Callable(self, "_on_about_to_show"))
 
 
 # Returns an Array of Dictionaries, where each dictionary is the details

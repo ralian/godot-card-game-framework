@@ -25,9 +25,9 @@ func _ready() -> void:
 	default_color = CFConst.TARGETTING_ARROW_COLOUR
 	$ArrowHead.color = CFConst.TARGETTING_ARROW_COLOUR
 	# warning-ignore:return_value_discarded
-	$ArrowHead/Area2D.connect("area_entered", self, "_on_ArrowHead_area_entered")
+	$ArrowHead/Area2D.connect("area_entered", Callable(self, "_on_ArrowHead_area_entered"))
 	# warning-ignore:return_value_discarded
-	$ArrowHead/Area2D.connect("area_exited", self, "_on_ArrowHead_area_exited")
+	$ArrowHead/Area2D.connect("area_exited", Callable(self, "_on_ArrowHead_area_exited"))
 
 
 func _process(_delta: float) -> void:

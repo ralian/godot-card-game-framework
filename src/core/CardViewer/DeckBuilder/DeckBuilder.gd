@@ -24,25 +24,25 @@ export var random_adverb_miss := 10
 # Controls how often an random adjective will
 # not appear in front of the noun. The higher the number, the less likely
 # to get an adjective
-export var random_adjective_miss := 1.1
+@export var random_adjective_miss := 1.1
 # Controls how often an random append will
 # not appear in front of the deck name.
 # The higher the number, the less likely to get an append
-export var random_append_miss := 2
+@export var random_append_miss := 2
 # Controls how often a second noun will appear in the name.
 # The higher the number, the less likely a second nount to appear
-export var second_noun_miss := 3
+@export var second_noun_miss := 3
 # The maximum amount of each card allowed in a deck.
 # Individual cards can modify  this
-export var max_quantity: int = 3
+@export var max_quantity: int = 3
 # The minimum amount cards required in a deck
-export var deck_minimum: int = 52
+@export var deck_minimum: int = 52
 # The maximum amount cards required in a deck
-export var deck_maximum: int = 60
+@export var deck_maximum: int = 60
 # We use this variable, so that the scene can be overriden with a custom one
-export var deck_card_object_scene = _DECK_CARD_OBJECT_SCENE
+@export var deck_card_object_scene = _DECK_CARD_OBJECT_SCENE
 # We use this variable, so that the scene can be overriden with a custom one
-export var deck_summary_scene = _DECK_SUMMARIES_SCENE
+@export var deck_summary_scene = _DECK_SUMMARIES_SCENE
 
 # This var will hold a pointer to the deck summaries scene.
 var deck_summaries
@@ -61,16 +61,16 @@ func _ready() -> void:
 	$VBC/HBC/DeckMC/CurrentDeck/DeckDetails.add_child(deck_summaries)
 	deck_summaries.setup()
 	# warning-ignore:return_value_discarded
-	_load_button.connect("deck_loaded", self,"_on_deck_loaded")
+	_load_button.connect("deck_loaded", Callable(self,"_on_deck_loaded"))
 	_deck_name.text = generate_random_deck_name()
 	# warning-ignore:return_value_discarded
-	_save_button.connect("pressed",self,"_on_Save_pressed")
+	_save_button.connect("pressed",Callable(self,"_on_Save_pressed"))
 	# warning-ignore:return_value_discarded
-	_reset_button.connect("pressed",self,"_on_Reset_pressed")
+	_reset_button.connect("pressed",Callable(self,"_on_Reset_pressed"))
 	# warning-ignore:return_value_discarded
-	_delete_button.connect("pressed",self,"_on_Delete_pressed")
+	_delete_button.connect("pressed",Callable(self,"_on_Delete_pressed"))
 	# warning-ignore:return_value_discarded
-	_randomize_name_button.connect("pressed",self,"_on_RandomizeName_pressed")
+	_randomize_name_button.connect("pressed",Callable(self,"_on_RandomizeName_pressed"))
 
 
 func _process(_delta: float) -> void:

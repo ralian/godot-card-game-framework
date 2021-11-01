@@ -25,7 +25,7 @@ func _ready():
 	if not cfc.are_all_nodes_mapped:
 		yield(cfc, "all_nodes_mapped")
 	# warning-ignore:return_value_discarded
-	get_viewport().connect("size_changed",self,"_on_Viewport_size_changed")
+	get_viewport().connect("size_changed",Callable(self,"_on_Viewport_size_changed"))
 	$ViewportContainer.rect_size = get_viewport().size
 	for container in get_tree().get_nodes_in_group("card_containers"):
 		container.re_place()

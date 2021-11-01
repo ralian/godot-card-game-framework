@@ -5,11 +5,11 @@ var abilities_header : RichTextLabel
 
 func _ready() -> void:
 	# warning-ignore:return_value_discarded
-	get_viewport().connect("size_changed",self,"_on_viewport_resized")
+	get_viewport().connect("size_changed",Callable(self,"_on_viewport_resized"))
 
 # Populates the list of available cards, with all defined cards in the game
 func populate_available_cards() -> void:
-	.populate_available_cards()
+	super()
 	abilities_header = _card_headers.get_node("Abilities")
 	abilities_header.rect_min_size.x = get_viewport().size.x / 2
 

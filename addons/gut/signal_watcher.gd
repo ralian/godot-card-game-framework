@@ -63,7 +63,7 @@ func _add_watched_signal(obj, name):
 		_watched_signals[obj] = {name:[]}
 	else:
 		_watched_signals[obj][name] = []
-	obj.connect(name, self, '_on_watched_signal', [obj, name])
+	obj.connect(name, Callable(self, '_on_watched_signal'), [obj, name])
 
 # This handles all the signals that are watched.  It supports up to 9 parameters
 # which could be emitted by the signal and the two parameters used when it is

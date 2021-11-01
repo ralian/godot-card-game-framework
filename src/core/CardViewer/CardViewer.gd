@@ -66,7 +66,7 @@ func _ready() -> void:
 	# This signal returns the load buttons' popup menu choice.
 	populate_available_cards()
 	# warning-ignore:return_value_discarded
-	_filter_line.connect("filters_changed", self, "_apply_filters")
+	_filter_line.connect("filters_changed", Callable(self, "_apply_filters"))
 	prepate_filter_buttons()
 	cfc.game_settings['deckbuilder_gridstyle'] =\
 			cfc.game_settings.get('deckbuilder_gridstyle', false)
@@ -96,11 +96,11 @@ func prepate_filter_buttons() -> void:
 					continue
 				var filter_button = _FILTER_BUTTON_SCENE.instance()
 				filter_button.setup(button_property, value)
-				filter_button.connect("pressed", self, "_on_filter_button_pressed")
-				filter_button.connect("right_pressed", self, "_on_filter_button_right_pressed", [filter_button])
+				filter_button.connect("pressed", Callable(self, "_on_filter_button_pressed"))
+				filter_button.connect("right_pressed", Callable(self, "_on_filter_button_right_pressed"), [filter_button])
 				_filter_buttons.add_child(filter_button)
 		# warning-ignore:return_value_discarded
-		_show_all_button.connect("pressed", self, "_on_ShowAll_button_pressed")
+		_show_all_button.connect("pressed", Callable(self, "_on_ShowAll_button_pressed"))
 
 
 func _process(_delta: float) -> void:

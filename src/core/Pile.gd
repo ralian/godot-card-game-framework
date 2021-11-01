@@ -42,13 +42,13 @@ var pre_sorted_order: Array
 func _ready():
 	add_to_group("piles")
 	# warning-ignore:return_value_discarded
-	view_button.connect("pressed",self,'_on_View_Button_pressed')
+	view_button.connect("pressed",Callable(self,'_on_View_Button_pressed'))
 	# warning-ignore:return_value_discarded
-	view_sorted_button.connect("pressed",self,'_on_ViewSorted_Button_pressed')
+	view_sorted_button.connect("pressed",Callable(self,'_on_ViewSorted_Button_pressed'))
 	# warning-ignore:return_value_discarded
-	$ViewPopup.connect("popup_hide",self,'_on_ViewPopup_popup_hide')
+	$ViewPopup.connect("popup_hide",Callable(self,'_on_ViewPopup_popup_hide'))
 	# warning-ignore:return_value_discarded
-	$ViewPopup.connect("about_to_show",self,'_on_ViewPopup_about_to_show')
+	$ViewPopup.connect("about_to_show",Callable(self,'_on_ViewPopup_about_to_show'))
 	set_pile_name(pile_name)
 	# warning-ignore:return_value_discarded
 	connect(

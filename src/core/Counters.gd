@@ -36,7 +36,7 @@ var needed_counters: Dictionary
 var temp_count_modifiers := {}
 
 # Holds the counter scene which has been created by the developer
-export(PackedScene) var counter_scene
+@export var counter_scene
 
 # This variable should hold the path to the Control container
 # Which will hold the counter objects.
@@ -53,7 +53,7 @@ var value_node: String
 func _ready() -> void:
 	# For the counter signal, we "push" connect it instead from this node.
 	# warning-ignore:return_value_discarded
-	self.connect("counter_modified", cfc.signal_propagator, "_on_signal_received")
+	self.connect("counter_modified", Callable(cfc.signal_propagator, "_on_signal_received"))
 
 
 # This function should be called by the _ready() function of the script which

@@ -32,10 +32,10 @@ export var quantity_property: String = "_max_allowed"
 
 func _ready() -> void:
 	for quantity_button in _qbuttons:
-		_qbuttons[quantity_button].connect("quantity_set", self, "_on_quantity_set")
+		_qbuttons[quantity_button].connect("quantity_set", Callable(self, "_on_quantity_set"))
 	_quantity_edit.minimum = 0
 	# warning-ignore:return_value_discarded
-	_quantity_edit.connect("int_entered", self, "set_quantity")
+	_quantity_edit.connect("int_entered", Callable(self, "set_quantity"))
 
 
 # Setter for quantity
@@ -70,7 +70,7 @@ func set_quantity(value) -> void:
 			deck_card_object._card_label.preview_popup.focus_info.info_panel_scene\
 					= card_viewer.info_panel_scene
 			deck_card_object._card_label.preview_popup.focus_info.setup()
-			deck_card_object.connect("quantity_changed",self,"_on_quantity_set")
+			deck_card_object.connect("quantity_changed",Callable(self,"_on_quantity_set"))
 		else:
 			deck_card_object.set_quantity(value)
 	elif value == 0:

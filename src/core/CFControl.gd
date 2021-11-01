@@ -97,7 +97,7 @@ func _ready() -> void:
 	# as they repopulate during unit testing many times.
 	# warning-ignore:return_value_discarded
 	flush_cache()
-	connect("all_nodes_mapped", self, "_on_all_nodes_mapped")
+	connect("all_nodes_mapped", Callable(self, "_on_all_nodes_mapped"))
 	# We need to reset these values for UNIT testing
 	NMAP = {}
 	are_all_nodes_mapped = false
@@ -298,7 +298,7 @@ class SignalPropagator:
 	# to the SignalPropagator
 	func connect_new_card(card):
 		for sgn in known_card_signals:
-			card.connect(sgn, self, "_on_signal_received")
+			card.connect(sgn, Callable(self, "_on_signal_received"))
 
 
 	# When a known signal is received, it asks all existing cards to check

@@ -111,17 +111,16 @@ signal card_targeted(card,trigger,details)
 @export var is_attachment := false:
 	set = set_is_attachment, get = get_is_attachment
 # If true, staggers the attachment so the side is also visible
-@export var attachment_offset = AttachmentOffset.TOP
+@export var attachment_offset:AttachmentOffset = AttachmentOffset.TOP
 # If true, the card front will be displayed when mouse hovers over the card
 # while it's face-down
 @export var is_viewed := false:
 	set = set_is_viewed, get = get_is_viewed
 # Specifies the card rotation in increments of 90 degrees
-@export_range(0, 270, 90) var card_rotation  := 0:
+@export_range(0, 270, 90) var card_rotation := 0:
 		set = set_card_rotation, get = get_card_rotation
 # Specifies where on the board the card may be placed
-@export var board_placement \
-		:= BoardPlacement.ANYWHERE
+@export var board_placement:BoardPlacement = BoardPlacement.ANYWHERE
 @export var mandatory_grid_name : String
 # Contains the scene which has the Card Back design to use for this card type
 # It needs to be scene which uses a CardBack class script.
@@ -285,7 +284,7 @@ func _ready() -> void:
 	_init_card_name()
 	setup()
 	# warning-ignore:return_value_discarded
-	$Control.connect("gui_input", self, "_on_Card_gui_input")
+	$Control.connect("gui_input", Callable(self, "_on_Card_gui_input"))
 	cfc.signal_propagator.connect_new_card(self)
 
 func _init_card_layout() -> void:

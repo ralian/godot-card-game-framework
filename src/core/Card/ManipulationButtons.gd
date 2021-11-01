@@ -29,7 +29,7 @@ func spawn_manipulation_buttons() -> void:
 		add_child(button)
 		# We also connect each button to the ourselves
 		# The method should exist in any script that extends this class
-		button.connect("pressed",self,"_on_" + button.name + "_pressed")
+		button.connect("pressed", Callable(self,"_on_" + button.name + "_pressed"))
 
 
 # Detects when the mouse is still hovering over the buttons area.

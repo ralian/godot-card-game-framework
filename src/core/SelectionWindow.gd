@@ -68,7 +68,7 @@ func initiate_selection(
 	if is_selection_optional:
 		var cancel_button := add_cancel("Cancel")
 		# warning-ignore:return_value_discarded
-		cancel_button.connect("pressed",self, "_on_cancel_pressed")
+		cancel_button.connect("pressed",Callable(self, "_on_cancel_pressed"))
 	# If the amount of cards available for the choice are below the requirements
 	# We return that the selection was canceled
 	elif card_array.size() < selection_count\
@@ -122,7 +122,7 @@ func initiate_selection(
 		_card_dupe_map[card] = dupe_selection
 		# We connect each card grid's gui input into a call which will handle
 		# The selections
-		card_grid_obj.connect("gui_input", self, "on_selection_gui_input", [dupe_selection, card])
+		card_grid_obj.connect("gui_input", Callable(self, "on_selection_gui_input"), [dupe_selection, card])
 	# We don't want to show a popup longer than the cards. So the width is based on the lowest
 	# between the grid columns or the amount of cards
 	var shown_columns = min(_card_grid.columns, card_array.size())
