@@ -22,20 +22,20 @@ export var faceup_cards := false
 
 
 # The popup node
-onready var pile_popup := $ViewPopup
-onready var _popup_grid := $ViewPopup/CardView
+@onready var pile_popup := $ViewPopup
+@onready var _popup_grid := $ViewPopup/CardView
 # Popup View button for Piles
-onready var view_button := $Control/ManipulationButtons/View
-onready var view_sorted_button := $Control/ManipulationButtons/ViewSorted
+@onready var view_button := $Control/ManipulationButtons/View
+@onready var view_sorted_button := $Control/ManipulationButtons/ViewSorted
 # The label node where the pile_name is written.
-onready var pile_name_label := $Control/CenterContainer/VBoxContainer/Label
+@onready var pile_name_label := $Control/CenterContainer/VBoxContainer/Label
 # The label node which shows the amount of cards in the pile.
-onready var card_count_label := $Control/CenterContainer/VBoxContainer\
+@onready var card_count_label := $Control/CenterContainer/VBoxContainer\
 		/PanelContainer/CenterContainer/CardCount
 
 # The popup node
-onready var _opacity_tween := $OpacityTween
-onready var _tween := $Tween
+@onready var _opacity_tween := $OpacityTween
+@onready var _tween := $Tween
 
 var pre_sorted_order: Array
 
@@ -164,7 +164,7 @@ func set_pile_name(value: String) -> void:
 	else:
 		pile_name = value
 	# if the pile name has been specified in the editor
-	# this function will run before the onready calls
+	# this function will run before the @onready calls
 	# so the pile_name_will be empty
 	if is_inside_tree():
 		pile_name_label.text = value

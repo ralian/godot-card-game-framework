@@ -10,9 +10,9 @@ const _TOKEN_SCENE = preload(_TOKEN_SCENE_FILE)
 # A flag on whether the token drawer is currently open
 var is_drawer_open := false setget set_is_drawer_open
 
-onready var _tween : Tween = $Tween
+@onready var _tween : Tween = $Tween
 # Stores a reference to the Card that is hosting this node
-onready var owner_card = get_parent().get_parent()
+@onready var owner_card = get_parent().get_parent()
 
 
 func _ready() -> void:

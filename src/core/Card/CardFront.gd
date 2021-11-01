@@ -38,7 +38,7 @@ var font_thread: Thread
 
 
 # Stores a reference to the Card that is hosting this node
-onready var card_owner = get_parent().get_parent().get_parent()
+@onready var card_owner = get_parent().get_parent().get_parent()
 
 
 ## Thread must be disposed (or "joined"), for portability.

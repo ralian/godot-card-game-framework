@@ -1,7 +1,7 @@
 # Contains details about the way to seek through the game for the 
 # Requested things to count. This is sent to ScriptPer to initiate it.
 class_name perMessage
-extends Reference
+extends RefCounted
 
 var per_seek: String
 var script_owner # Card type, but cannot type to avoid cyclic dependency

@@ -2,7 +2,7 @@
 #
 # This is a library of static functions.
 class_name CFUtils
-extends Reference
+extends RefCounted
 
 # The path to the optional confirm scene. This has to be defined explicitly
 # here, in order to use it in its preload, otherwise the parser gives an error

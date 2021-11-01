@@ -1,6 +1,6 @@
 # This class can be used to create random deck names
 class_name DeckNameRandomizer
-extends Reference
+extends RefCounted
 
 
 var adverbs = [

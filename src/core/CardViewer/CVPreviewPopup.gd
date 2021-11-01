@@ -6,7 +6,7 @@ extends Popup
 # The card currently being shown in a popup.
 var preview_card: Card
 # The popup panel which contains the card.
-onready var focus_info := $FocusInfo
+@onready var focus_info := $FocusInfo
 
 func _process(_delta: float) -> void:
 	if visible:

@@ -3,7 +3,7 @@
 #
 # It is typically never instanced directly.
 class_name ScriptObject
-extends Reference
+extends RefCounted
 
 # Sent when the _init() method has completed
 # warning-ignore:unused_signal

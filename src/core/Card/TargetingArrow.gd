@@ -17,7 +17,7 @@ var is_targeting := false
 # once it is used
 var target_object : Node = null
 # Stores a reference to the Card that is hosting this node
-onready var owner_object = get_parent()
+@onready var owner_object = get_parent()
 
 
 func _ready() -> void:

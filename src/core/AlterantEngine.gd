@@ -7,7 +7,7 @@
 # which allow it, are going through all the cards, looking for valid Alterants
 # definitions. 
 class_name AlterantEngine
-extends Reference
+extends RefCounted
 
 const _ASK_INTEGER_SCENE_FILE = CFConst.PATH_CORE + "AskInteger.tscn"
 const _ASK_INTEGER_SCENE = preload(_ASK_INTEGER_SCENE_FILE)

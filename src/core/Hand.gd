@@ -36,7 +36,7 @@ export var hand_size := 10
 #	hand will be automatically discarded
 export(ExcessCardsBehaviour) var excess_cards
 
-onready var _counter_cards = $Counters/Cards
+@onready var _counter_cards = $Counters/Cards
 
 func _ready() -> void:
 	add_to_group("hands")

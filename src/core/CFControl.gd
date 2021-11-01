@@ -25,13 +25,15 @@ var _ut_show_token_buttons := CFConst.SHOW_TOKEN_BUTTONS
 # doesn't exist, defaults to the values specified in CFConst, if applicable.
 var game_settings := {}
 # If set to true, the player will be prevented from interacting with the game
-var game_paused := false setget set_game_paused
+var game_paused := false:
+	set = set_game_paused
 # If this is false, all CardContainers will pause in their ready() scene
 # until all other CardContainers have been mapped.
 var are_all_nodes_mapped := false
 # The games initial Random Number Generator seed.
 # When this stays the same, the game randomness will always play the predictable.
-var game_rng_seed = "CFC Random Seed" setget set_seed
+var game_rng_seed = "CFC Random Seed":
+	set = set_seed
 # This will store all card properties which are placed in the card labels
 var card_definitions := {}
 # This will store all card scripts
@@ -250,7 +252,7 @@ func reset_game() -> void:
 	card_drag_ongoing = null
 	cfc.NMAP.board.queue_free()
 	# We need to give Godot time to deinstance all nodes.
-	yield(get_tree().create_timer(0.1), "timeout")
+	await get_tree().create_timer(0.1)
 	NMAP.clear()
 	main._ready()
 

@@ -1,7 +1,7 @@
 # This class stores a filter for the Card Viewer 
 # and is responsible for doing comparisons of expressions
 class_name CVFilter
-extends Reference
+extends RefCounted
 
 # The property of a card this filter is checking against
 var property: String setget set_property

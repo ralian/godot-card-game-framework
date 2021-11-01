@@ -6,7 +6,7 @@ extends CenterContainer
 var display_card: Card
 var card_list_object
 
-onready var preview_popup := $PreviewPopup
+@onready var preview_popup := $PreviewPopup
 
 func _ready() -> void:
 	rect_min_size = CFConst.CARD_SIZE

@@ -7,7 +7,7 @@
 #
 # This class is loaded by each card invidually during execution.
 class_name ScriptingEngine
-extends Reference
+extends RefCounted
 
 const _ASK_INTEGER_SCENE_FILE = CFConst.PATH_CORE + "AskInteger.tscn"
 const _ASK_INTEGER_SCENE = preload(_ASK_INTEGER_SCENE_FILE)

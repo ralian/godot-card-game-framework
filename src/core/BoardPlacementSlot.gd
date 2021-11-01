@@ -9,7 +9,7 @@ extends Control
 var occupying_card = null
 
 # Stores a reference to the owning BoardPlacementGrid object
-onready var owner_grid = get_parent().get_parent()
+@onready var owner_grid = get_parent().get_parent()
 
 func _ready() -> void:
 	# We set the initial size of our highlight and area, to 

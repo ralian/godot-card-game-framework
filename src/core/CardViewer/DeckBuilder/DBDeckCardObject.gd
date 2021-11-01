@@ -12,7 +12,7 @@ var quantity: int
 # The card name which is displayed in the summary
 var card_name: String
 
-onready var _card_label:= $CardLabel
+@onready var _card_label:= $CardLabel
 
 func _ready() -> void:
 	pass

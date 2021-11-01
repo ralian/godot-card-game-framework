@@ -11,9 +11,9 @@ var _previously_focused_cards := {}
 # This var hold the currently focused card duplicate.
 var _current_focus_source : Card = null
 
-onready var card_focus := $VBC/Focus
-onready var focus_info := $VBC/FocusInfo
-onready var _focus_viewport := $VBC/Focus/Viewport
+@onready var card_focus := $VBC/Focus
+@onready var focus_info := $VBC/FocusInfo
+@onready var _focus_viewport := $VBC/Focus/Viewport
 
 
 # Called when the node enters the scene tree for the first time.

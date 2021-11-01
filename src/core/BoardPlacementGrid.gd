@@ -24,7 +24,7 @@ export(Color) var highlight = CFConst.TARGET_HOVER_COLOUR
 export var auto_extend := false
 
 # Sets a custom label for this grid
-onready var name_label = $Control/Label
+@onready var name_label = $Control/Label
 
 func _ready() -> void:
 	# We ensure the separation of the grid slots is always 1 pixel larger

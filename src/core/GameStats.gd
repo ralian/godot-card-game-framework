@@ -4,7 +4,7 @@
 # And the game name in the Project > Settings should match the
 # game name set when running CGF-Stats.
 class_name GameStats
-extends Reference
+extends RefCounted
 
 # Stores the unique id for this match. It is used to submit final results
 var game_uuid : String

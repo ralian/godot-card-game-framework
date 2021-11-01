@@ -5,7 +5,7 @@
 #
 # This class needs to have no references to [ScriptingObject]
 class_name CFScriptUtils
-extends Reference
+extends RefCounted
 
 # Handles modifying the intensity of tasks based on altering scripts on cards
 #

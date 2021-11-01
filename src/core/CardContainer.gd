@@ -42,15 +42,15 @@ var _debugger_hook := false
 # as a result of other containers sharing the same anchor placement
 var accumulated_shift := Vector2(0,0)
 # ManipulationButtons node
-onready var manipulation_buttons := $Control/ManipulationButtons
+@onready var manipulation_buttons := $Control/ManipulationButtons
 # ManipulationButtons tween node
-onready var manipulation_buttons_tween := $Control/ManipulationButtons/Tween
+@onready var manipulation_buttons_tween := $Control/ManipulationButtons/Tween
 # Control node
-onready var control := $Control
+@onready var control := $Control
 # Shuffle button
-onready var shuffle_button := $Control/ManipulationButtons/Shuffle
+@onready var shuffle_button := $Control/ManipulationButtons/Shuffle
 # Container higlight
-onready var highlight := $Control/Highlight
+@onready var highlight := $Control/Highlight
 
 
 func _process(_delta: float) -> void:

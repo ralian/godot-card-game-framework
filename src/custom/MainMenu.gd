@@ -3,11 +3,11 @@ extends Panel
 # The time it takes to switch from one menu tab to another
 const menu_switch_time = 0.35
 
-onready var v_buttons := $MainMenu/VBox/Center/VButtons
-onready var main_menu := $MainMenu
-#onready var settings_menu := $SettingsMenu
-onready var deck_builder := $DeckBuilder
-onready var card_library := $CardLibrary
+@onready var v_buttons := $MainMenu/VBox/Center/VButtons
+@onready var main_menu := $MainMenu
+#@onready var settings_menu := $SettingsMenu
+@onready var deck_builder := $DeckBuilder
+@onready var card_library := $CardLibrary
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

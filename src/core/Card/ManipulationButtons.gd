@@ -11,9 +11,9 @@ var needed_buttons: Dictionary
 # We use this variable to check if buttons are active for performance reasons
 var _are_active := true
 
-onready var _tween = $Tween
+@onready var _tween = $Tween
 # Hold the node which owns this node.
-onready var owner_node = get_parent().get_parent()
+@onready var owner_node = get_parent().get_parent()
 
 
 func _ready() -> void:

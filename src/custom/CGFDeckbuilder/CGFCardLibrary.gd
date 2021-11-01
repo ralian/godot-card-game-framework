@@ -1,6 +1,6 @@
 extends CardLibrary
 
-onready var back_button := $VBC/HBC/MC/AvailableCards/Settings/Back
+@onready var back_button := $VBC/HBC/MC/AvailableCards/Settings/Back
 var abilities_header : RichTextLabel
 
 func _ready() -> void:

@@ -3,9 +3,9 @@ class_name Highlight
 extends Control
 
 # Stores a reference to the Card that is hosting this node
-onready var owner_node = get_parent().get_parent()
-onready var _left_right := $LeftRight
-onready var _top_bottom := $TopBottom
+@onready var owner_node = get_parent().get_parent()
+@onready var _left_right := $LeftRight
+@onready var _top_bottom := $TopBottom
 
 func _ready() -> void:
 	pass

@@ -8,7 +8,7 @@ export var count := 0 setget set_count, get_count
 
 var token_drawer
 
-onready var count_label = $CenterContainer/Count
+@onready var count_label = $CenterContainer/Count
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

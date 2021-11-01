@@ -52,15 +52,15 @@ export var list_card_object_scene = _LIST_CARD_OBJECT_SCENE
 # We use this variable, so that the scene can be overriden with a custom one
 export var grid_card_object_scene = _GRID_CARD_OBJECT_SCENE
 
-onready var _available_cards := $VBC/HBC/MC/AvailableCards/ScrollContainer/CardList
-onready var _card_grid := $VBC/HBC/MC/AvailableCards/ScrollContainer/CardGrid
-onready var _filter_line := $VBC/HBC/MC/AvailableCards/HBC/FilterLine
-onready var _filter_buttons := $VBC/HBC/MC/AvailableCards/CC/ButtonFilters
-onready var _card_count := $VBC/HBC/MC/AvailableCards/HBC/CardCount
-onready var _card_headers := $VBC/HBC/MC/AvailableCards/CardListHeaders
-onready var _card_name_header := $VBC/HBC/MC/AvailableCards/CardListHeaders/Name
-onready var _card_type_header := $VBC/HBC/MC/AvailableCards/CardListHeaders/Type
-onready var _show_all_button := $VBC/HBC/MC/AvailableCards/CC/ButtonFilters/ShowAll
+@onready var _available_cards := $VBC/HBC/MC/AvailableCards/ScrollContainer/CardList
+@onready var _card_grid := $VBC/HBC/MC/AvailableCards/ScrollContainer/CardGrid
+@onready var _filter_line := $VBC/HBC/MC/AvailableCards/HBC/FilterLine
+@onready var _filter_buttons := $VBC/HBC/MC/AvailableCards/CC/ButtonFilters
+@onready var _card_count := $VBC/HBC/MC/AvailableCards/HBC/CardCount
+@onready var _card_headers := $VBC/HBC/MC/AvailableCards/CardListHeaders
+@onready var _card_name_header := $VBC/HBC/MC/AvailableCards/CardListHeaders/Name
+@onready var _card_type_header := $VBC/HBC/MC/AvailableCards/CardListHeaders/Type
+@onready var _show_all_button := $VBC/HBC/MC/AvailableCards/CC/ButtonFilters/ShowAll
 
 func _ready() -> void:
 	# This signal returns the load buttons' popup menu choice.

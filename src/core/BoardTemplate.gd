@@ -23,7 +23,7 @@ var _t = 0
 # task is to be used.
 var counters : Counters
 
-onready var mouse_pointer = \
+@onready var mouse_pointer = \
 	load(CFConst.PATH_MOUSE_POINTER).instance()
 
 # Called when the node enters the scene tree for the first time.

@@ -47,14 +47,14 @@ export var deck_summary_scene = _DECK_SUMMARIES_SCENE
 # This var will hold a pointer to the deck summaries scene.
 var deck_summaries
 
-onready var _deck_cards := $VBC/HBC/DeckMC/CurrentDeck/ScrollContainer/CardsInDeck
-onready var _deck_name := $VBC/HBC/DeckMC/CurrentDeck/DeckNameEdit
-onready var _load_button := $VBC/HBC/DeckMC/CurrentDeck/Buttons/Load
-onready var _notice := $VBC/HBC/DeckMC/CurrentDeck/HBoxContainer/NoticeLabel
-onready var _save_button := $VBC/HBC/DeckMC/CurrentDeck/Buttons/Save
-onready var _reset_button := $VBC/HBC/DeckMC/CurrentDeck/Buttons/Reset
-onready var _delete_button := $VBC/HBC/DeckMC/CurrentDeck/Buttons/Delete
-onready var _randomize_name_button := $VBC/HBC/DeckMC/CurrentDeck/HBoxContainer/RandomizeName
+@onready var _deck_cards := $VBC/HBC/DeckMC/CurrentDeck/ScrollContainer/CardsInDeck
+@onready var _deck_name := $VBC/HBC/DeckMC/CurrentDeck/DeckNameEdit
+@onready var _load_button := $VBC/HBC/DeckMC/CurrentDeck/Buttons/Load
+@onready var _notice := $VBC/HBC/DeckMC/CurrentDeck/HBoxContainer/NoticeLabel
+@onready var _save_button := $VBC/HBC/DeckMC/CurrentDeck/Buttons/Save
+@onready var _reset_button := $VBC/HBC/DeckMC/CurrentDeck/Buttons/Reset
+@onready var _delete_button := $VBC/HBC/DeckMC/CurrentDeck/Buttons/Delete
+@onready var _randomize_name_button := $VBC/HBC/DeckMC/CurrentDeck/HBoxContainer/RandomizeName
 
 func _ready() -> void:
 	deck_summaries = deck_summary_scene.instance()

@@ -17,11 +17,11 @@ var quantity: int setget set_quantity
 export var quantity_property: String = "_max_allowed"
 
 
-onready var _plus_button := $Quantity/Plus
-onready var _minus_button := $Quantity/Minus
-onready var _quantity_edit := $Quantity/IntegerLineEdit
+@onready var _plus_button := $Quantity/Plus
+@onready var _minus_button := $Quantity/Minus
+@onready var _quantity_edit := $Quantity/IntegerLineEdit
 # Links to the various quantity buttons in a way that can be easily iterated.
-onready var _qbuttons = {
+@onready var _qbuttons = {
 	0: $'Quantity/0',
 	1: $'Quantity/1',
 	2: $'Quantity/2',

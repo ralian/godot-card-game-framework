@@ -4,7 +4,7 @@
 # and then replacing the path in CFConst.PATH_OVERRIDABLE_UTILS 
 # with the location of their extended script.
 class_name OVUtils
-extends Reference
+extends RefCounted
 
 const _CARD_SELECT_SCENE_FILE = CFConst.PATH_CORE + "SelectionWindow.tscn"
 const _CARD_SELECT_SCENE = preload(_CARD_SELECT_SCENE_FILE)

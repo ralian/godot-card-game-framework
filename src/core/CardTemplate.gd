@@ -14,21 +14,21 @@ extends Area2D
 #
 # See _process_card_state()
 enum CardState {
-	IN_HAND					#0
-	FOCUSED_IN_HAND			#1
-	MOVING_TO_CONTAINER		#2
-	REORGANIZING			#3
-	PUSHED_ASIDE			#4
-	DRAGGED					#5
-	DROPPING_TO_BOARD		#6
-	ON_PLAY_BOARD			#7
-	FOCUSED_ON_BOARD		#8
-	IN_PILE					#9
-	VIEWED_IN_PILE			#10
-	IN_POPUP				#11
-	FOCUSED_IN_POPUP		#12
-	VIEWPORT_FOCUS			#13
-	PREVIEW					#14
+	IN_HAND,				#0
+	FOCUSED_IN_HAND,		#1
+	MOVING_TO_CONTAINER,	#2
+	REORGANIZING,			#3
+	PUSHED_ASIDE,			#4
+	DRAGGED,				#5
+	DROPPING_TO_BOARD,		#6
+	ON_PLAY_BOARD,			#7
+	FOCUSED_ON_BOARD,		#8
+	IN_PILE,				#9
+	VIEWED_IN_PILE,			#10
+	IN_POPUP,				#11
+	FOCUSED_IN_POPUP,		#12
+	VIEWPORT_FOCUS,			#13
+	PREVIEW,				#14
 	DECKBUILDER_GRID		#15
 }
 # Specifies where a card is allowed to drop on the board
@@ -39,20 +39,20 @@ enum CardState {
 # * ANY_GRID: Cards can only be manually dropped in BoardPlacementGrids
 # * ANYWHERE: Cards can only be manually dropped anywhere on the board
 enum BoardPlacement{
-	NONE
-	SPECIFIC_GRID
-	GRID_AUTOPLACEMENT
-	ANY_GRID
+	NONE,
+	SPECIFIC_GRID,
+	GRID_AUTOPLACEMENT,
+	ANY_GRID,
 	ANYWHERE
 }
 enum AttachmentOffset{
-	TOP_LEFT
-	TOP
-	TOP_RIGHT
-	RIGHT
-	LEFT
-	BOTTOM_LEFT
-	BOTTOM
+	TOP_LEFT,
+	TOP,
+	TOP_RIGHT,
+	RIGHT,
+	LEFT,
+	BOTTOM_LEFT,
+	BOTTOM,
 	BOTTOM_RIGHT
 }
 # Used to spawn CardChoices. We have to add the consts together
@@ -96,7 +96,7 @@ signal card_targeted(card,trigger,details)
 
 # The properties dictionary will be filled in by the setup() code
 # according to the card definintion.
-export var properties : Dictionary
+@export var properties : Dictionary
 # We export this variable to the editor to allow us to add scripts to each card
 # object directly instead of only via code.
 #
@@ -104,29 +104,31 @@ export var properties : Dictionary
 # found in `CardScriptDefinitions.gd`
 #
 # See `CardScriptDefinitions.gd` for the proper format of a scripts dictionary
-export var scripts : Dictionary
+@export var scripts : Dictionary
 # If true, the card can be attached to other cards and will follow
 # their host around the table. The card will always return to its host
 # when dragged away
-export var is_attachment := false setget set_is_attachment, get_is_attachment
+@export var is_attachment := false:
+	set = set_is_attachment, get = get_is_attachment
 # If true, staggers the attachment so the side is also visible
-export(AttachmentOffset) var attachment_offset = AttachmentOffset.TOP
+@export var attachment_offset = AttachmentOffset.TOP
 # If true, the card front will be displayed when mouse hovers over the card
 # while it's face-down
-export var is_viewed  := false setget set_is_viewed, get_is_viewed
+@export var is_viewed := false:
+	set = set_is_viewed, get = get_is_viewed
 # Specifies the card rotation in increments of 90 degrees
-export(int, 0, 270, 90) var card_rotation  := 0 \
-		setget set_card_rotation, get_card_rotation
+@export_range(0, 270, 90) var card_rotation  := 0:
+		set = set_card_rotation, get = get_card_rotation
 # Specifies where on the board the card may be placed
-export(BoardPlacement) var board_placement \
+@export var board_placement \
 		:= BoardPlacement.ANYWHERE
-export var mandatory_grid_name : String
+@export var mandatory_grid_name : String
 # Contains the scene which has the Card Back design to use for this card type
 # It needs to be scene which uses a CardBack class script.
-export(PackedScene) var card_back_design : PackedScene
-export(PackedScene) var card_front_design : PackedScene
+@export var card_back_design : PackedScene
+@export var card_front_design : PackedScene
 # We use this variable, so that the scene can be overriden with a custom one
-export var targeting_arrow_scene = _TARGETING_SCENE
+@export var targeting_arrow_scene = _TARGETING_SCENE
 # If true, the player will not be able to drop dragged cards back into
 # CardContainers. The player will only be allowed to drop cards to the board
 # or back into the container they picked them front
@@ -134,14 +136,14 @@ export var targeting_arrow_scene = _TARGETING_SCENE
 # piles
 # Be careful with this setting, as it will allow the player to drop cards
 # on top of the hand or pile areas.
-export var disable_dropping_to_cardcontainers := false
+@export var disable_dropping_to_cardcontainers := false
 # If true, the player will not be able to drag cards out of the hand manually
-export var disable_dragging_from_hand := false
+@export var disable_dragging_from_hand := false
 # If true, the player will not be able to drag cards around the board manually
-export var disable_dragging_from_board := false
+@export var disable_dragging_from_board := false
 # If true, the player will not be able to drag cards out of piles
 # (Either directly from top, or from popup window
-export var disable_dragging_from_pile := false
+@export var disable_dragging_from_pile := false
 # If true, and the player attempt to drag the card out of hand
 #	then the card will be check on whether it has scripts
 #	which are [targeting other cards](SP#KEY_SUBJECT_V_TARGET) and if so
@@ -153,33 +155,35 @@ export var disable_dragging_from_pile := false
 #
 # If not, it will act according to
 # [disable_dragging_from_hand](#disable_dragging_from_hand)
-export var hand_drag_starts_targeting := false
+@export var hand_drag_starts_targeting := false
 # The duration of the tweening animation when cards rotate in hand
-export(float, 0.0, 1.0, 0.05) var in_hand_tween_duration := 0.3
+@export_range(0.0, 1.0, 0.05) var in_hand_tween_duration := 0.3
 # The duration of the tweening animation when reorganizing cards in hand
-export(float, 0.0, 1.0, 0.05) var reorganization_tween_duration := 0.4
+@export_range(0.0, 1.0, 0.05) var reorganization_tween_duration := 0.4
 # The duration of the tweening animation when focusing a card in hand
-export(float, 0.0, 1.0, 0.05) var focus_tween_duration := 0.3
+@export_range(0.0, 1.0, 0.05) var focus_tween_duration := 0.3
 # The duration of the tweening animation when moving a card between containers
-export(float, 0.0, 1.0, 0.05) var to_container_tween_duration := 0.3
+@export_range(0.0, 1.0, 0.05) var to_container_tween_duration := 0.3
 # The duration of the tweening animation when cards are pushed aside
 # due to a neighbor being focused
-export(float, 0.0, 1.0, 0.05) var pushed_aside_tween_duration := 0.3
+@export_range(0.0, 1.0, 0.05) var pushed_aside_tween_duration := 0.3
 # The duration of the tweening animation when cards are dropping to the board
-export(float, 0.0, 1.0, 0.05) var to_board_tween_duration := 0.25
+@export_range(0.0, 1.0, 0.05) var to_board_tween_duration := 0.25
 # The duration of the tweening animation when cards are scaled in play area on the board
-export(float, 0.0, 1.0, 0.05) var on_board_tween_duration := 0.3
+@export_range(0.0, 1.0, 0.05) var on_board_tween_duration := 0.3
 # The duration of the tweening animation when cards are scaled when being dragged
-export(float, 0.0, 1.0, 0.05) var dragged_tween_duration := 0.2
+@export_range(0.0, 1.0, 0.05) var dragged_tween_duration := 0.2
 
 # This is **the** authorative name for this node
 #
 # If not set, will be set to the value of the Name label in the front.
 # if that is also not set, will be set.
 # to the human-readable value of the "name" node property.
-var canonical_name : String setget set_card_name, get_card_name
+var canonical_name : String:
+	set = set_card_name, get = get_card_name
 # Ensures all nodes fit inside this rect.
-var card_size := CFConst.CARD_SIZE setget set_card_size
+var card_size := CFConst.CARD_SIZE:
+	set = set_card_size
 # Starting state for each card
 var state : int = CardState.PREVIEW
 # If this card is hosting other cards,
@@ -189,7 +193,8 @@ var attachments := []
 # this tracks who its host is.
 var current_host_card : Card = null
 # If true, the card will be displayed faceup. If false, it will be facedown
-var is_faceup := true setget set_is_faceup, get_is_faceup
+var is_faceup := true:
+	set = set_is_faceup, get = get_is_faceup
 # Used to keep the card and mouse cursor in sync when dragging the card around
 # Represents the cursor's position relative to the card origin when drag was initiated
 var _drag_offset: Vector2
@@ -251,20 +256,20 @@ var original_layouts:= {}
 var is_executing_scripts := false
 
 # This variable will point to the scene which controls the targeting arrow
-onready var targeting_arrow
+@onready var targeting_arrow
 
-onready var _tween = $Tween
-onready var _flip_tween = $Control/FlipTween
-onready var _control = $Control
+@onready var _tween = $Tween
+@onready var _flip_tween = $Control/FlipTween
+@onready var _control = $Control
 
 # The node which hosts all manipulation buttons belonging to this card
 # as well as methods to hide/show them, and connect them to this card.
-onready var buttons = $Control/ManipulationButtons
+@onready var buttons = $Control/ManipulationButtons
 # The node which hosts all tokens belonging to this card
 # as well as the methods retrieve them and to to hide/show their drawer.
-onready var tokens: TokenDrawer = $Control/Tokens
+@onready var tokens: TokenDrawer = $Control/Tokens
 # The node which manipulates the highlight borders.
-onready var highlight = $Control/Highlight
+@onready var highlight = $Control/Highlight
 
 
 # Called when the node enters the scene tree for the first time.
@@ -434,7 +439,7 @@ func _on_Card_gui_input(event) -> void:
 					cfc.card_drag_ongoing = self
 					# We need to wait a bit to make sure the other card has a chance
 					# to go through their scripts
-					yield(get_tree().create_timer(0.1), "timeout")
+					await get_tree().create_timer(0.1)
 					# If this variable is still set to true,
 					# it means the mouse-button is still pressed
 					# We also check if another card is already selected for dragging,
@@ -708,7 +713,7 @@ func get_property_and_alterants(property: String,
 				{SP.KEY_PROPERTY_NAME: property,},
 				properties.get(property))
 			if alteration is GDScriptFunctionState:
-				alteration = yield(alteration, "completed")
+				alteration = await(alteration)
 			_is_property_being_altered = false
 			# The first element is always the total modifier from all alterants
 			property_value += alteration.value_alteration
@@ -917,7 +922,7 @@ func get_card_name() -> String:
 #
 # It's preferrable to set canonical_name instead.
 func set_name(value : String) -> void:
-	.set_name(value)
+	super(value)
 	card_front.card_labels["Name"].text = value
 	canonical_name = value
 
@@ -1070,7 +1075,7 @@ func move_to(targetHost: Node,
 					var grid = cfc.NMAP.board.get_grid(mandatory_grid_name)
 					if grid:
 						slot = grid.find_available_slot()
-						yield(get_tree().create_timer(0.1), "timeout")
+						await get_tree().create_timer(0.1)
 						if slot:
 							board_position = slot
 						else:
@@ -1137,7 +1142,7 @@ func move_to(targetHost: Node,
 			emit_signal("card_moved_to_hand",
 					self,
 					"card_moved_to_hand",
-					 {
+					{
 						"destination": targetHost,
 						"source": parentHost,
 						"tags": tags
@@ -1193,9 +1198,9 @@ func move_to(targetHost: Node,
 				# One for the fancy move, and then the move to the final position.
 				# If we don't then the card will appear to teleport
 				# to the pile before starting animation
-				yield($Tween, "tween_all_completed")
+				await ToSignal($Tween, "tween_all_completed")
 				if cfc.game_settings.fancy_movement:
-					yield($Tween, "tween_all_completed")
+					await ToSignal($Tween, "tween_all_completed")
 				targetHost.reorganize_stack()
 		else:
 			interruptTweening()
@@ -1221,7 +1226,7 @@ func move_to(targetHost: Node,
 			emit_signal("card_moved_to_board",
 					self,
 					"card_moved_to_board",
-					 {
+					{
 						"destination": targetHost,
 						"source": parentHost,
 						"tags": tags
@@ -1344,7 +1349,7 @@ func execute_scripts(
 		trigger,
 		state_exec)
 	if confirm_return is GDScriptFunctionState: # Still working.
-		confirm_return = yield(confirm_return, "completed")
+		confirm_return = await ToSignal(confirm_return, "completed")
 		# If the player chooses not to play an optional cost
 		# We consider the whole cost dry run unsuccesful
 		if not confirm_return:
@@ -1356,7 +1361,7 @@ func execute_scripts(
 		var choices_menu = _CARD_CHOICES_SCENE.instance()
 		choices_menu.prep(canonical_name,state_scripts)
 		# We have to wait until the player has finished selecting an option
-		yield(choices_menu,"id_pressed")
+		await ToSignal(choices_menu,"id_pressed")
 		# If the player just closed the pop-up without choosing
 		# an option, we don't execute anything
 		if choices_menu.id_selected:
@@ -1384,7 +1389,7 @@ func execute_scripts(
 		# execution until targetting has completed
 		sceng.execute(CFInt.RunType.COST_CHECK)
 		if not sceng.all_tasks_completed:
-			yield(sceng,"tasks_completed")
+			await ToSignal(sceng,"tasks_completed")
 		# If the dry-run of the ScriptingEngine returns that all
 		# costs can be paid, then we proceed with the actual run
 		if sceng.can_all_costs_be_paid and not only_cost_check:
@@ -1394,20 +1399,20 @@ func execute_scripts(
 			# as it causes a cyclic reference error when parsing
 			sceng.execute()
 			if not sceng.all_tasks_completed:
-				yield(sceng,"tasks_completed")
+				await ToSignal(sceng,"tasks_completed")
 			# warning-ignore:void_assignment
 			var func_return = common_post_execution_scripts(trigger)
 			# We make sure this function does to return until all
 			# custom post execution scripts have also finished
 			if func_return is GDScriptFunctionState: # Still working.
-				func_return = yield(func_return, "completed")
+				func_return = await ToSignal(func_return, "completed")
 		# This will only trigger when costs could not be paid, and will
 		# execute the "is_else" tasks
 		elif not sceng.can_all_costs_be_paid and not only_cost_check:
 			#print("DEBUG:" + str(state_scripts))
 			sceng.execute(CFInt.RunType.ELSE)
 			if not sceng.all_tasks_completed:
-				yield(sceng,"tasks_completed")
+				await ToSignal(sceng,"tasks_completed")
 		is_executing_scripts = false
 	return(sceng)
 
@@ -1715,7 +1720,7 @@ func animate_shuffle(anim_speed : float, style : int) -> void:
 	if rot_anim:
 		_add_tween_rotation(0,random_rot,rot_speed,rot_anim,Tween.EASE_OUT)
 	_tween.start()
-	yield(_tween, "tween_all_completed")
+	await ToSignal(_tween, "tween_all_completed")
 	_add_tween_position(center_card_pop_position,starting_card_position,
 			pos_speed,end_pos_anim,Tween.EASE_IN)
 	if rot_anim:
@@ -1965,7 +1970,7 @@ func _clear_attachment_status(tags := ["Manual"]) -> void:
 		# Attachments typically follow their parents to the same container
 		card.move_to(get_parent())
 		# We do a small wait to make the attachment drag look nicer
-		yield(get_tree().create_timer(0.1), "timeout")
+		await get_tree().create_timer(0.1)
 	attachments.clear()
 
 
@@ -2023,7 +2028,7 @@ func _flip_card(to_invisible: Control, to_visible: Control, instant := false) ->
 				(highlight.rect_size.x-3)/2,0), 0.4,
 				Tween.TRANS_QUAD, Tween.EASE_IN)
 		_flip_tween.start()
-		yield(_flip_tween, "tween_all_completed")
+		await ToSignal(_flip_tween, "tween_all_completed")
 		to_visible.visible = true
 		to_invisible.visible = false
 		_flip_tween.interpolate_property(to_visible,'rect_scale',
@@ -2261,7 +2266,7 @@ func _process_card_state() -> void:
 					_add_tween_global_position(global_position, intermediate_position,
 						to_container_tween_duration)
 					$Tween.start()
-					yield($Tween, "tween_all_completed")
+					await ToSignal($Tween, "tween_all_completed")
 					_tween_stuck_time = 0
 					_fancy_move_second_part = true
 				# We need to check again, just in case it's been reorganized instead.
@@ -2271,7 +2276,7 @@ func _process_card_state() -> void:
 					_add_tween_rotation($Control.rect_rotation,_target_rotation,
 						to_container_tween_duration)
 					$Tween.start()
-					yield($Tween, "tween_all_completed")
+					await ToSignal($Tween, "tween_all_completed")
 					_determine_idle_state()
 				_fancy_move_second_part = false
 

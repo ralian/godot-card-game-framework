@@ -1,5 +1,5 @@
 # See README.md
-extends Reference
+extends RefCounted
 
 # This fuction returns all the scripts of the specified card name.
 #

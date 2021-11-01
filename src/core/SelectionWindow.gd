@@ -20,8 +20,8 @@ var is_selection_optional: bool
 var is_cancelled := false
 var _card_dupe_map := {}
 
-onready var _card_grid = $GridContainer
-onready var _tween = $Tween
+@onready var _card_grid = $GridContainer
+@onready var _tween = $Tween
 
 #func _ready():
 #	var c = cfc.instance_card("Test Card 1")
