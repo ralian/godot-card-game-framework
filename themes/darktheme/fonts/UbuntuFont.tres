@@ -1,0 +1,8 @@
+[gd_resource type="Font" load_steps=2 format=3 uid="uid://5kwn71hw8n46"]
+
+[ext_resource type="FontData" uid="uid://clpm44j6xid8l" path="res://themes/darktheme/fonts/Ubuntu-L.ttf" id="1_q066w"]
+
+[resource]
+variation_coordinates = {
+}
+data/0 = ExtResource( "1_q066w" )
