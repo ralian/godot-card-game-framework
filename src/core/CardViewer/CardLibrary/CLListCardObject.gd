@@ -7,7 +7,7 @@ extends CVListCardObject
 # The display of the card's Name and Type, also all the other card properties.
 # If the card text is rich text, it will also be formatted as bbcode.
 func setup(_card_name: String) -> void:
-	.setup(_card_name)
+	super(_card_name)
 	if card_viewer.property_width_exceptions.has(CardConfig.SCENE_PROPERTY):
 		_card_type.rect_min_size.x = card_viewer.property_width_exceptions[CardConfig.SCENE_PROPERTY]
 	else:

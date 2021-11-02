@@ -44,10 +44,7 @@ func on_button_pressed(_button_name : String) -> void:
 
 func switch_to_tab(tab: Control) -> void:
 	var main_position_x : float
-	match tab:
-#		settings_menu:
-#			main_position_x = -get_viewport().size.x
-		deck_builder, card_library:
+	if tab == deck_builder or tab == card_library:
 			main_position_x = get_viewport().size.x
 	$MenuTween.interpolate_property(main_menu,'rect_position:x',
 			main_menu.rect_position.x, main_position_x, menu_switch_time,
@@ -60,10 +57,7 @@ func switch_to_tab(tab: Control) -> void:
 
 func switch_to_main_menu(tab: Control) -> void:
 	var tab_position_x : float
-	match tab:
-#		settings_menu:
-#			tab_position_x = get_viewport().size.x
-		deck_builder, card_library:
+	if tab == deck_builder or tab == card_library:
 			tab_position_x = -get_viewport().size.x
 	$MenuTween.interpolate_property(tab,'rect_position:x',
 			tab.rect_position.x, tab_position_x, menu_switch_time,

@@ -15,12 +15,12 @@ const _DECK_SUMMARIES_SCENE_FILE = CFConst.PATH_CORE\
 const _DECK_SUMMARIES_SCENE = preload(_DECK_SUMMARIES_SCENE_FILE)
 
 # Contains a link to the random deck name generator reference
-export(Script) var deck_name_randomizer
+@export var deck_name_randomizer : Script
 # Controls how often an random adverb will
 # not appear in front of the adjective. The higher the number, the less likely
 # to get an adverb
 # Adverbs will not appear if adjectives did not.
-export var random_adverb_miss := 10
+@export var random_adverb_miss := 10
 # Controls how often an random adjective will
 # not appear in front of the noun. The higher the number, the less likely
 # to get an adjective
@@ -74,29 +74,31 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	# We keep updating the card count label with the amount of cards in the deck
-	var card_count = 0
-	for category in _deck_cards.get_children():
-		for card_object in category.get_node("CategoryCards").get_children():
-			card_count += card_object.quantity
-	deck_summaries.deck_min_label.text = str(card_count) + ' Cards'
-	if deck_minimum and deck_maximum:
-		deck_summaries.deck_min_label.text += ' (min ' + str(deck_minimum)\
-				+ ', max ' + str(deck_maximum) + ')'
-	elif deck_minimum:
-		deck_summaries.deck_min_label.text += ' (min ' + str(deck_minimum) + ')'
-	elif deck_maximum:
-		deck_summaries.deck_min_label.text += ' (max ' + str(deck_maximum) + ')'
-	# We paint the font red if the deck is invalid
-	if (deck_minimum and card_count < deck_minimum)\
-			or (deck_maximum and card_count > deck_maximum):
-		deck_summaries.deck_min_label.modulate = Color(1,0,0)
-	else:
-		deck_summaries.deck_min_label.modulate = Color(1,1,1)
+	
+	if _deck_cards != null:
+		# We keep updating the card count label with the amount of cards in the deck
+		var card_count = 0
+		for category in _deck_cards.get_children():
+			for card_object in category.get_node("CategoryCards").get_children():
+				card_count += card_object.quantity
+		deck_summaries.deck_min_label.text = str(card_count) + ' Cards'
+		if deck_minimum and deck_maximum:
+			deck_summaries.deck_min_label.text += ' (min ' + str(deck_minimum)\
+					+ ', max ' + str(deck_maximum) + ')'
+		elif deck_minimum:
+			deck_summaries.deck_min_label.text += ' (min ' + str(deck_minimum) + ')'
+		elif deck_maximum:
+			deck_summaries.deck_min_label.text += ' (max ' + str(deck_maximum) + ')'
+		# We paint the font red if the deck is invalid
+		if (deck_minimum and card_count < deck_minimum)\
+				or (deck_maximum and card_count > deck_maximum):
+			deck_summaries.deck_min_label.modulate = Color(1,0,0)
+		else:
+			deck_summaries.deck_min_label.modulate = Color(1,1,1)
 
 # Populates the list of available cards, with all defined cards in the game
 func populate_available_cards() -> void:
-	.populate_available_cards()
+	super()
 	for list_card_object in _available_cards.get_children():
 		list_card_object.max_allowed = max_quantity
 		list_card_object.setup_max_quantity()
@@ -201,11 +203,11 @@ func generate_random_deck_name() -> String:
 	rng = CFUtils.randi_range(0,name_randomizer.appends.size() * random_append_miss)
 	if rng < name_randomizer.appends.size():
 		deck_name["append"] = name_randomizer.appends[rng]
-	var compiled_deck_name: PoolStringArray = []
+	var compiled_deck_name: PackedStringArray = []
 	for part in ["adverb", "adjective", "noun", "second_noun", "append"]:
 		if deck_name.get(part):
 			compiled_deck_name.append(deck_name.get(part))
-	return(compiled_deck_name.join(' ').strip_edges())
+	return(str(' ').join(compiled_deck_name).strip_edges())
 
 # Clears deck list
 func _on_Reset_pressed() -> void:
@@ -221,7 +223,7 @@ func _on_RandomizeName_pressed() -> void:
 
 # Shows a fading text to the user notifying them of recent action results.
 func _set_notice(text: String, colour := Color(0,1,0)) -> void:
-	var tween: Tween = _notice.get_node("Tween")
+	var tween = _notice.get_node("Tween")
 	_notice.text = text
 	_notice.modulate.a = 1
 	_notice.set("custom_colors/font_color",colour)

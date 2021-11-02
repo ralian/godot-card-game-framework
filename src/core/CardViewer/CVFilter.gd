@@ -4,15 +4,18 @@ class_name CVFilter
 extends RefCounted
 
 # The property of a card this filter is checking against
-var property: String setget set_property
+var property: String:
+	set = set_property
 # an operator is either:
 # * : – equals
 # * ! – different from
 # * < – less than
 # * > – more than
-var operator: String setget set_operator
+var operator: String:
+	set = set_operator
 # The expression can either be a integer, or a regex
-var expression setget set_expression
+var expression:
+	set = set_expression
 # The type of filter this is. It will only be an int, if the 
 # property being compared is a number
 var type := "regex"
@@ -39,8 +42,8 @@ func set_operator(value) -> void:
 
 # Setter for expression var
 func set_expression(value: String) -> void:
-	if type == "int" and value.is_valid_integer():
-		expression = int(value)
+	if type == "int" and value.is_valid_int():
+		expression = value.to_int()
 	else:
 		var string_regex := RegEx.new()
 # warning-ignore:return_value_discarded
@@ -62,7 +65,7 @@ func assess_card_object(card_object: CVListCardObject) -> bool:
 	# we allow number properties to get string values to give flexibility to the 
 	# designer, but we need to check for it to make proper comparisons
 	if property in CardConfig.PROPERTIES_NUMBERS\
-			and (typeof(prop_value) == TYPE_INT or typeof(prop_value) == TYPE_REAL):
+			and (typeof(prop_value) == TYPE_INT or typeof(prop_value) == TYPE_FLOAT):
 		if not CFUtils.compare_numbers(prop_value,expression,operator):
 			card_match = false
 	# For arrays, we want to return false, if none of the tags match the filter

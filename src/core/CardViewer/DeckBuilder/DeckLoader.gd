@@ -24,7 +24,9 @@ static func load_all_decks() -> Array:
 	var loaded_decks_list := []
 	for deck in available_decks:
 		file.open(CFConst.DECKS_PATH + deck, File.READ)
-		var data = JSON.parse(file.get_as_text())
+		var json = JSON.new()
+		json.parse(file.get_as_text())
+		var data = json.get_data()
 		file.close()
 		# We expect decks in JSON Dictionary format
 		# In the future we might support plaintext as well.

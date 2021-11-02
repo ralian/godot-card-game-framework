@@ -16,7 +16,7 @@ signal filters_changed(filters)
 # Developers can customize this dictionary based on each game's card properties
 # Each character key defined here, corresponds to one property and when
 # inserted as the criteria, will check the expression against that property
-export var criteria_map = {
+@export var criteria_map = {
 	'a': 'Abilities',
 	't': 'Type',
 	'g': 'Tags',
@@ -57,11 +57,11 @@ func _ready() -> void:
 			+ "< - less than\n"\
 			+ "> - greater than\n"
 	# warning-ignore:return_value_discarded
-	connect("text_changed", self, "on_text_changed")
+	connect("text_changed", Callable(self, "on_text_changed"))
 	# warning-ignore:return_value_discarded
-	connect("mouse_entered", self, "_on_FilterLine_mouse_entered")
+	connect("mouse_entered", Callable(self, "_on_FilterLine_mouse_entered"))
 	# warning-ignore:return_value_discarded
-	connect("mouse_exited", self, "_on_FilterLine_mouse_exited")
+	connect("mouse_exited", Callable(self, "_on_FilterLine_mouse_exited"))
 
 func _process(_delta: float) -> void:
 	if $Syntax.visible:
@@ -90,7 +90,7 @@ func compile_filters(line_text: String) -> Array:
 		# we use the regex groups to populate the DBFilter object
 		if regex_result:
 			# if a specific conditional was not used, we default to the card name
-			if not regex_result.get_string(1):
+			if null == regex_result.get_string(1):
 				filter_entry.property = "Name"
 			else:
 				filter_entry.property = criteria_map[regex_result.get_string(1)]

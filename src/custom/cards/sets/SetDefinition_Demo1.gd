@@ -3,7 +3,8 @@
 extends RefCounted
 
 const SET = "Demo Set 1"
-const CARDS := {
+# For some reason in godot 4 a dictionary isn't considered a constexpr?
+var CARDS = {
 	"Rich Text Card": {
 		"Type": "Purple",
 		"Tags": ["Rich","Text"],

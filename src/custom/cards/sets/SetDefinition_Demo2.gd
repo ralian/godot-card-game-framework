@@ -3,7 +3,7 @@
 extends RefCounted
 
 const SET = "Demo Set 2"
-const CARDS := {
+var CARDS := {
 	"Test Card 3": {
 		"Type": "Green",
 		"Tags": ["Tag 1","Tag 2"],

@@ -11,4 +11,4 @@ func _process(_delta: float) -> void:
 	if category_card_count == 0:
 		queue_free()
 	else:
-		$CategoryLabel.text = name + ' (' + str(category_card_count) + ')'
+		$CategoryLabel.text = str(name, ' (', category_card_count, ')')

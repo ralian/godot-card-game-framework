@@ -224,7 +224,8 @@ func load_card_definitions() -> Dictionary:
 				CFConst.PATH_SETS, CFConst.CARD_SET_NAME_PREPEND)
 	var combined_sets := {}
 	for set_file in set_definitions:
-		var set_dict = load(CFConst.PATH_SETS + set_file).CARDS
+		var set = load(CFConst.PATH_SETS + set_file).new()
+		var set_dict = set.CARDS
 		for dict_entry in set_dict:
 			combined_sets[dict_entry] = set_dict[dict_entry]
 	return(combined_sets)
@@ -290,7 +291,7 @@ func reset_game() -> void:
 	card_drag_ongoing = null
 	cfc.NMAP.board.queue_free()
 	# We need to give Godot time to deinstance all nodes.
-	await get_tree().ToSignal(get_tree().create_timer(0.1), "timeout")
+	await (get_tree().ToSignal(get_tree().create_timer(0.1), "timeout"))
 	NMAP.clear()
 	main._ready()
 

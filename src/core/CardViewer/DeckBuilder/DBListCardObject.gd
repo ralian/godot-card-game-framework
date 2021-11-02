@@ -10,11 +10,12 @@ var deck_card_object: DBDeckCardObject
 var max_allowed: int
 
 # The amount of this card selected to be added to the deck.
-var quantity: int setget set_quantity
+var quantity: int:
+	set = set_quantity
 # We will look for this card property to determine how many possible
 # copies of the card are allowed in the deck. A value of 0 (or undefined)
 # Will allow as many copies as the max_quantity
-export var quantity_property: String = "_max_allowed"
+@export var quantity_property: String = "_max_allowed"
 
 
 @onready var _plus_button := $Quantity/Plus
@@ -94,9 +95,9 @@ func set_quantity(value) -> void:
 # the users with +/- buttons and a freeform integer line editor.
 func setup_max_quantity(force := 0) -> void:
 	if force:
-		 max_allowed = force
+		max_allowed = force
 	elif card_properties.get("_max_allowed",0):
-		 max_allowed = card_properties.get("_max_allowed")
+		max_allowed = card_properties.get("_max_allowed")
 	_quantity_edit.maximum = max_allowed
 	_quantity_edit.placeholder_text = \
 			"Max " + str(max_allowed)
