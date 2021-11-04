@@ -1,25 +1,66 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://cscwbwg65kbg"]
 
-[ext_resource path="res://src/core/BoardPlacementSlot.tscn" type="PackedScene" id=1]
-[ext_resource path="res://src/core/BoardPlacementGrid.tscn" type="PackedScene" id=2]
+[ext_resource type="PackedScene" path="res://src/core/BoardPlacementSlot.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://src/core/BoardPlacementGrid.tscn" id="2"]
+[ext_resource type="FontData" uid="uid://cmrops2i7fvgw" path="res://fonts/Xolonium-Regular.ttf" id="3_jdg87"]
 
-[node name="PlacementGridDemo" instance=ExtResource( 2 )]
+[sub_resource type="StyleBoxFlat" id="1"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.0431373, 0.294118, 0.823529, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="Font" id="2"]
+variation_coordinates = {
+}
+data/0 = ExtResource( "3_jdg87" )
+
+[node name="PlacementGridDemo" instance=ExtResource( "2" )]
+theme_override_styles/panel = SubResource( "1" )
 
 [node name="GridContainer" parent="." index="0"]
-margin_right = 497.0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 497.0
+offset_bottom = 194.0
+theme_override_constants/vseparation = 5
+theme_override_constants/hseparation = 5
 columns = 4
+script = null
 
-[node name="BoardPlacementSlot2" parent="GridContainer" index="1" instance=ExtResource( 1 )]
-margin_left = 125.0
-margin_right = 245.0
+[node name="BoardPlacementSlot" parent="GridContainer" index="0"]
+offset_right = 120.0
+offset_bottom = 192.0
 
-[node name="BoardPlacementSlot3" parent="GridContainer" index="2" instance=ExtResource( 1 )]
-margin_left = 250.0
-margin_right = 370.0
+[node name="BoardPlacementSlot2" parent="GridContainer" index="1" instance=ExtResource( "1" )]
+offset_left = 125.0
+offset_right = 245.0
+offset_bottom = 192.0
 
-[node name="BoardPlacementSlot4" parent="GridContainer" index="3" instance=ExtResource( 1 )]
-margin_left = 375.0
-margin_right = 495.0
+[node name="BoardPlacementSlot3" parent="GridContainer" index="2" instance=ExtResource( "1" )]
+offset_left = 250.0
+offset_right = 370.0
+offset_bottom = 192.0
+
+[node name="BoardPlacementSlot4" parent="GridContainer" index="3" instance=ExtResource( "1" )]
+offset_left = 375.0
+offset_right = 495.0
+offset_bottom = 192.0
 
 [node name="Control" parent="." index="1"]
-margin_right = 497.0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 497.0
+offset_bottom = 194.0
+script = null
+
+[node name="Label" parent="Control" index="0"]
+theme_override_fonts/font = SubResource( "2" )
+structured_text_bidi_override_options = []
+script = null
