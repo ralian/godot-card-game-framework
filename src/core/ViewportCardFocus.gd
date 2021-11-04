@@ -51,10 +51,9 @@ func _process(_delta) -> void:
 		var current_dupe_focus: Card = _previously_focused_cards[c]
 		# We don't delete old dupes, to avoid overhead to the engine
 		# insteas, we just hide them.
-		if _current_focus_source != c\
-				and not $VBC/Focus/Tween.is_active():
+		if _current_focus_source != c: # Removed condition "and not $VBC/Focus/Tween.is_active():"
 			current_dupe_focus.visible = false
-	if not is_instance_valid(_current_focus_source) and $VBC/Focus.modulate.a != 0 and not $VBC/Focus/Tween.is_active():
+	if not is_instance_valid(_current_focus_source) and $VBC/Focus.modulate.a != 0: # Removed condition  and not $VBC/Focus/Tween.is_active()
 		$VBC/Focus.modulate.a = 0
 
 
@@ -165,10 +164,12 @@ func _extra_dupe_ready(dupe_focus: Card, card: Card) -> void:
 func _input(event):
 	# We use this to allow the developer to take card screenshots
 	# for any number of purposes
-	if event.is_action_pressed("screenshot_card"):
-		var img = _focus_viewport.get_texture().get_data()
-		await get_tree().ToSignal(get_tree(), "idle_frame")
-		await get_tree().ToSignal(get_tree(), "idle_frame")
-		img.convert(Image.FORMAT_RGBA8)
-		img.flip_y()
-		img.save_png("user://" + _current_focus_source.canonical_name + ".png")
+	# I am disabling this temporarily for the 4.0 port since this seems to break
+#	if event.is_action_pressed("screenshot_card"):
+#		var img = _focus_viewport.get_texture().get_data()
+#		await get_tree().ToSignal(get_tree(), "idle_frame")
+#		await get_tree().ToSignal(get_tree(), "idle_frame")
+#		img.convert(Image.FORMAT_RGBA8)
+#		img.flip_y()
+#		img.save_png("user://" + _current_focus_source.canonical_name + ".png")
+	return

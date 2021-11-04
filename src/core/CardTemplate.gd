@@ -257,7 +257,9 @@ var is_executing_scripts := false
 # This variable will point to the scene which controls the targeting arrow
 @onready var targeting_arrow
 
-@onready var _tween = $Tween
+# This is a tween reference to replace the tween node which was removed in 4.0
+@onready var _tween = get_tree().create_tween()
+
 @onready var _flip_tween = $Control/FlipTween
 @onready var _control = $Control
 
@@ -330,12 +332,12 @@ func _init_card_name() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta) -> void:
-	if $Tween.is_active() and not cfc.ut: # Debug code for catch potential Tween deadlocks
+	if _tween and _tween.is_active() and not cfc.ut: # Debug code for catch potential Tween deadlocks
 		_tween_stuck_time += delta
 		if _tween_stuck_time > 5 and int(fmod(_tween_stuck_time,3)) == 2 :
 			print("Tween Stuck for ",_tween_stuck_time,
-					"seconds. Reports leftover runtime: ",$Tween.get_runtime ( ))
-			$Tween.remove_all()
+					"seconds. Reports leftover runtime: ", _tween.get_runtime ( ))
+			_tween.remove_all()
 			_tween_stuck_time = 0
 	else:
 		_tween_stuck_time = 0
@@ -1569,6 +1571,8 @@ func interruptTweening() ->void:
 
 # Changes card focus (highlighted and put on the focus viewport)
 func set_focus(requestedFocus: bool, colour := CFConst.FOCUS_HOVER_COLOUR) -> void:
+	if highlight == null: return
+	
 	# We use an if to avoid performing constant operations in _process
 	# We only modify the highlight though, if the card is not being
 	# highlighted by another effect (such as a targetting arrow etc)
@@ -2099,6 +2103,8 @@ func _add_tween_scale(
 # Makes sure that when a card is in a specific state while
 # its position, highlights, scaling and so on, stay as expected
 func _process_card_state() -> void:
+	if buttons == null: return
+	
 	match state:
 		CardState.IN_HAND:
 			z_index = 0
@@ -2112,11 +2118,11 @@ func _process_card_state() -> void:
 			# in the rotation expected of their position
 			if cfc.game_settings.hand_use_oval_shape:
 				_target_rotation  = _recalculate_rotation()
-				if not $Tween.is_active() \
+				if not _tween.is_active() \
 						and not CFUtils.compare_floats($Control.rect_rotation, _target_rotation):
 					_add_tween_rotation($Control.rect_rotation,_target_rotation,
 						in_hand_tween_duration)
-					$Tween.start()
+					_tween.start()
 
 		CardState.FOCUSED_IN_HAND:
 			# Used when card is focused on by the mouse hovering over it.
