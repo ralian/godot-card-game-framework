@@ -30,7 +30,7 @@ var counters : Counters
 func _ready() -> void:
 	add_to_group("board")
 	if not cfc.are_all_nodes_mapped:
-		yield(cfc, "all_nodes_mapped")
+		await Node.ToSignal(cfc, "all_nodes_mapped")
 	add_child(mouse_pointer)
 	for container in get_tree().get_nodes_in_group("piles"):
 		container.re_place()
@@ -45,8 +45,8 @@ func _process(_delta: float) -> void:
 func _physics_process(delta) -> void:
 	if _UT_interpolation_requested:
 		if _UT_mouse_position != _UT_target_mouse_position:
-			_t += delta * _UT_mouse_speed
-			_UT_mouse_position = _UT_current_mouse_position.linear_interpolate(
+			_t += delta * _UT_mouse_speed * _UT_current_mouse_position.distance_to(_UT_target_mouse_position)
+			_UT_mouse_position = _UT_current_mouse_position.move_toward(
 					_UT_target_mouse_position, _t)
 		else:
 			_t = 0

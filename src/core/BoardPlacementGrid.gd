@@ -34,7 +34,7 @@ func _ready() -> void:
 			MousePointer.MOUSE_RADIUS * 2 + 1)
 	$GridContainer.set("custom_constants/hseparation",
 			MousePointer.MOUSE_RADIUS * 2 + 1)
-	if not name_label.text:
+	if name_label.text == null or name_label.text.length() == 0:
 		name_label.text = name
 
 

@@ -21,9 +21,12 @@ func _ready():
 	cfc.map_node(self)
 	# We use the below while to wait until all the nodes we need have been mapped
 	# "hand" should be one of them.
-	$ViewportContainer/Viewport.add_child(board_scene.instance())
+	$ViewportContainer/Viewport.add_child(board_scene.instantiate())
 	if not cfc.are_all_nodes_mapped:
-		await Node.ToSignal(cfc, "all_nodes_mapped")
+		cfc.connect("all_nodes_mapped", Callable(self, "_on_nodes_mapped"))
+	else: _on_nodes_mapped()
+
+func _on_nodes_mapped():
 	# warning-ignore:return_value_discarded
 	get_viewport().connect("size_changed",Callable(self,"_on_Viewport_size_changed"))
 	$ViewportContainer.rect_size = get_viewport().size

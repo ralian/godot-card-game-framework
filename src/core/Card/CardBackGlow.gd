@@ -22,7 +22,7 @@ func _ready() -> void:
 func _on_Pulse_completed() -> void:
 	# We only pulse the card if it's face-down and on the board
 	if not card_owner.is_faceup: #and get_parent() == cfc.NMAP.board:
-		_pulse_values.invert()
+		_pulse_values.reverse()
 		start_card_back_animation()
 	else:
 		stop_card_back_animation()

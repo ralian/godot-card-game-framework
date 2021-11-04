@@ -36,7 +36,7 @@ var needed_counters: Dictionary
 var temp_count_modifiers := {}
 
 # Holds the counter scene which has been created by the developer
-@export var counter_scene
+@export var counter_scene : PackedScene
 
 # This variable should hold the path to the Control container
 # Which will hold the counter objects.
@@ -63,7 +63,7 @@ func _ready() -> void:
 func spawn_needed_counters() -> Array:
 	var all_counters := []
 	for counter_name in needed_counters:
-		var counter = counter_scene.instance()
+		var counter = counter_scene.instantiate()
 		counters_container.add_child(counter)
 		all_counters.append(counter)
 		counter.name = counter_name
@@ -137,7 +137,7 @@ func mod_counter(counter_name: String,
 # Returns the value of the specified counter.
 # Takes into account temp_count_modifiers and alterants
 func get_counter(counter_name: String, requesting_object = null) -> int:
-	var count = get_counter_and_alterants(counter_name, requesting_object).count
+	var count = (await get_counter_and_alterants(counter_name, requesting_object)).count
 	return(count)
 
 
@@ -162,13 +162,11 @@ func get_counter_and_alterants(
 		"alterants_details": {}
 	}
 	if requesting_object:
-		alteration = CFScriptUtils.get_altered_value(
+		alteration = await CFScriptUtils.get_altered_value(
 			requesting_object,
 			"get_counter",
 			{SP.KEY_COUNTER_NAME: counter_name,},
 			counters[counter_name])
-		if alteration is GDScriptFunctionState:
-			alteration = yield(alteration, "completed")
 	# The first element is always the total modifier from all alterants
 	count += alteration.value_alteration
 	var temp_modifiers = {

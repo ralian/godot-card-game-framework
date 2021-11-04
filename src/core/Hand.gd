@@ -6,9 +6,9 @@ extends CardContainer
 # Specifies the behaviour to follow when trying to draw a card and we
 # exceed our hand size
 enum ExcessCardsBehaviour {
-	DISALLOW
-	ALLOW
-	DISCARD_DRAWN
+	DISALLOW,
+	ALLOW,
+	DISCARD_DRAWN,
 	DISCARD_OLDEST
 }
 
@@ -22,10 +22,10 @@ var _excess_discard_pile : Pile = null
 # Specify the name of the pile to discard excess cards
 # When "Discard Drawn" or "Discard Oldest" is specified
 # in excess_cards
-export var excess_discard_pile_name : String
+@export var excess_discard_pile_name : String
 # The maximum hand size. What happens if this is exceeded is determined
 # by `excess_cards`
-export var hand_size := 10
+@export var hand_size := 10
 # Determines the behaviour of cards over the hand limit
 # * DISALLOWED: When hand is at limit, no more cards will be added to it
 # * ALLOWED: More cards than the limit can be added to the hand. The developer
@@ -34,7 +34,7 @@ export var hand_size := 10
 #	automatically discarded
 # * "DISCARD_OLDEST": When cards exceed the limit, the oldest card in the
 #	hand will be automatically discarded
-export(ExcessCardsBehaviour) var excess_cards
+@export var excess_cards : ExcessCardsBehaviour
 
 @onready var _counter_cards = $Counters/Cards
 
@@ -42,8 +42,8 @@ func _ready() -> void:
 	add_to_group("hands")
 
 func prepare_excess_discard_pile() -> void:
-	if excess_discard_pile_name\
-			and not _excess_discard_pile\
+	if excess_discard_pile_name != null and excess_discard_pile_name.length() > 0\
+			and _excess_discard_pile == null\
 			and cfc.NMAP.has(excess_discard_pile_name.to_lower()):
 		_excess_discard_pile = cfc.NMAP[excess_discard_pile_name.to_lower()]
 
@@ -81,7 +81,7 @@ func get_leftmost_card() -> Card:
 func shuffle_cards() -> void:
 	# When shuffling the hand, we also want to show the player
 	# So execute the parent function, then call each card to reorg itself
-	.shuffle_cards()
+	super()
 	for card in get_all_cards():
 		card.interruptTweening()
 		card.reorganize_self()
@@ -143,7 +143,7 @@ func re_place() -> void:
 	var others_rect_y := 0.0
 	# First we put the hand in its expected location, based on nothing
 	# else but its anchor
-	.re_place()
+	super()
 	# Hook for the debugger
 	# I could figure this out from the hand anchor, but this way
 	# is easier to understand.
@@ -191,7 +191,7 @@ func re_place() -> void:
 		# This yield allows the other control nodes to set their side
 		# In which case the hand, which is typically set to expand vertically
 		# doesn't expand too much
-		yield(get_tree().create_timer(0.01), "timeout")
+		await Node.ToSignal(get_tree().create_timer(0.01), "timeout")
 		$Control.call_deferred("set_size", get_parent().rect_size)
 #		$Control.rect_size = get_parent().rect_size
 #		print_debug(get_parent().rect_size)
@@ -210,7 +210,7 @@ func re_place() -> void:
 	# Finally we make sure the cards organize according to the new
 	# hand-size.
 	call_deferred("_init_control_size")
-	yield(get_tree().create_timer(0.01), "timeout")
+	await Node.ToSignal(get_tree().create_timer(0.01), "timeout")
 	for c in get_all_cards():
 		c.position = c.recalculate_position()
 

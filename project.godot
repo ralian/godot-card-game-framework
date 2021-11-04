@@ -15,6 +15,11 @@ _global_script_classes=[{
 "path": "res://src/core/AlterantEngine.gd"
 }, {
 "base": "Control",
+"class": &"Board",
+"language": &"GDScript",
+"path": "res://src/core/BoardTemplate.gd"
+}, {
+"base": "Control",
 "class": &"BoardPlacementGrid",
 "language": &"GDScript",
 "path": "res://src/core/BoardPlacementGrid.gd"
@@ -134,6 +139,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://src/core/CardViewer/CardViewer.gd"
 }, {
+"base": "Control",
+"class": &"Counters",
+"language": &"GDScript",
+"path": "res://src/core/Counters.gd"
+}, {
 "base": "RefCounted",
 "class": &"CustomScripts",
 "language": &"GDScript",
@@ -179,6 +189,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://src/core/DetailPanels.gd"
 }, {
+"base": "CardContainer",
+"class": &"Hand",
+"language": &"GDScript",
+"path": "res://src/core/Hand.gd"
+}, {
 "base": "Control",
 "class": &"Highlight",
 "language": &"GDScript",
@@ -188,6 +203,11 @@ _global_script_classes=[{
 "class": &"IntegerLineEdit",
 "language": &"GDScript",
 "path": "res://src/core/IntegerLineEdit.gd"
+}, {
+"base": "VBoxContainer",
+"class": &"ManipulationButtons",
+"language": &"GDScript",
+"path": "res://src/core/Card/ManipulationButtons.gd"
 }, {
 "base": "Area2D",
 "class": &"MousePointer",
@@ -276,6 +296,7 @@ _global_script_classes=[{
 }]
 _global_script_class_icons={
 "AlterantEngine": "",
+"Board": "",
 "BoardPlacementGrid": "",
 "BoardPlacementSlot": "",
 "CFConst": "",
@@ -300,6 +321,7 @@ _global_script_class_icons={
 "CardLabel": "",
 "CardLibrary": "",
 "CardViewer": "",
+"Counters": "",
 "CustomScripts": "",
 "DBDeckCardObject": "",
 "DBDeckSummaries": "",
@@ -309,8 +331,10 @@ _global_script_class_icons={
 "DeckLoader": "",
 "DeckNameRandomizer": "",
 "DetailPanels": "",
+"Hand": "",
 "Highlight": "",
 "IntegerLineEdit": "",
+"ManipulationButtons": "",
 "MousePointer": "",
 "OVUtils": "",
 "Pile": "",

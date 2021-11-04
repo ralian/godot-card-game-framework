@@ -53,12 +53,12 @@ func reshuffle_all_in_pile(pile = cfc.NMAP.deck):
 	for c in get_tree().get_nodes_in_group("cards"):
 		if c.get_parent() != pile and c.state != Card.CardState.DECKBUILDER_GRID:
 			c.move_to(pile)
-			yield(get_tree().create_timer(0.1), "timeout")
+			await Node.ToSignal(get_tree().create_timer(0.1), "timeout")
 	# Last card in, is the top card of the pile
 	var last_card : Card = pile.get_top_card()
 	if last_card._tween.is_active():
-		yield(last_card._tween, "tween_all_completed")
-	yield(get_tree().create_timer(0.2), "timeout")
+		await Node.ToSignal(last_card._tween, "tween_all_completed")
+	await Node.ToSignal(get_tree().create_timer(0.2), "timeout")
 	pile.shuffle_cards()
 
 
@@ -84,7 +84,7 @@ func load_test_cards(extras := 11) -> void:
 			test_cards.append(ckey)
 	var test_card_array := []
 	for _i in range(extras):
-		if not test_cards.empty():
+		if not test_cards.is_empty():
 			var random_card_name = \
 					test_cards[CFUtils.randi() % len(test_cards)]
 			test_card_array.append(cfc.instance_card(random_card_name))
@@ -94,6 +94,8 @@ func load_test_cards(extras := 11) -> void:
 		for card_name in test_cards:
 			test_card_array.append(cfc.instance_card(card_name))
 	for card in test_card_array:
+		if !cfc.NMAP.has("deck"):
+			cfc.NMAP["deck"] = $"/root/Main/ViewportContainer/Viewport/Board/Hand"
 		cfc.NMAP.deck.add_child(card)
 		#card.set_is_faceup(false,true)
 		card._determine_idle_state()

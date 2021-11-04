@@ -137,7 +137,7 @@ func _on_all_nodes_mapped() -> void:
 # for NMAP to be completed.
 func map_node(node) -> void:
 	# The nmap always stores lowercase keys. Each key is a node name
-	var node_name: String = node.name.to_lower()
+	var node_name: String = str(node.name).to_lower()
 	# I don't know why but suring UT sometimes I get duplicate board nodes.
 	# I guess the queue_free is not as fast before the next test
 	if 'board' in node_name:
@@ -176,7 +176,7 @@ func instance_card(card_name: String):
 	# in each card. Any property can be used
 	var template = load(CFConst.PATH_CARDS
 			+ card_definitions[card_name][CardConfig.SCENE_PROPERTY] + ".tscn")
-	var card = template.instance()
+	var card = template.instantiate()
 	# We set the card_name variable so that it's able to be used later
 	card.canonical_name = card_name
 	return(card)
